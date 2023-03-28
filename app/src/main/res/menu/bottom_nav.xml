@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Home"
+        android:icon="@drawable/home"
+        android:id="@+id/fragmentQuestHomePage"/>
+    <item android:title="Profile"
+        android:icon="@drawable/profile"
+        android:id="@+id/fragmentProfilePage"/>
+    <item android:title="Search"
+        android:icon="@drawable/search"
+        android:id="@+id/fragmentSearchPage"/>
+    <item android:title="Rankings"
+        android:icon="@drawable/rankings"
+        android:id="@+id/fragmentRankingsPage"/>
+</menu>
