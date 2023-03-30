@@ -15,7 +15,8 @@ import com.example.cs5520finalproject.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements FragmentSearchPage.ISearchPage {
 
     ActivityMainBinding binding;
 
@@ -54,5 +55,17 @@ public class MainActivity extends AppCompatActivity {
         this.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
+    }
+
+    @Override
+    public void toStarredQuestsPage() {
+        Fragment FragmentStarredQuestsPage = new FragmentStarredQuestsPage();
+        replaceFragment(FragmentStarredQuestsPage);
+    }
+
+    @Override
+    public void toSearchPage() {
+        Fragment FragmentSearchPage = new FragmentSearchPage();
+        replaceFragment(FragmentSearchPage);
     }
 }
