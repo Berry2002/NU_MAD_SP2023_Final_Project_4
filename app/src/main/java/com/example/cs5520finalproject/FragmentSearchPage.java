@@ -1,7 +1,9 @@
 package com.example.cs5520finalproject;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +25,8 @@ public class FragmentSearchPage extends Fragment {
     private ImageButton search_page_prev_button, search_page_next_button, search_page_starred_button;
 
     private TextView search_page_curr_page_text;
+
+    private ISearchPage mListener;
 
     public FragmentSearchPage() {
         // Required empty public constructor
@@ -56,6 +60,31 @@ public class FragmentSearchPage extends Fragment {
         search_page_starred_button = view.findViewById(R.id.search_page_starred_button);
         search_page_curr_page_text = view.findViewById(R.id.search_page_curr_page_text);
 
+        search_page_starred_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.toStarredQuestsPage();
+            }
+        });
         return view;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof ISearchPage){
+            this.mListener = (ISearchPage) context;
+        } else{
+            throw new RuntimeException(context.toString()
+                    + "must implement ISearchPage");
+        }
+    }
+
+    // interface for search page
+    public interface ISearchPage {
+        // search page to starred quests page
+        void toStarredQuestsPage();
+        // starred quests page to search page
+        void toSearchPage();
     }
 }
