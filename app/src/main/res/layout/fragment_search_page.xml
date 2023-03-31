@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".FragmentSearchPage">
 
-    <!-- TODO: Update blank fragment layout -->
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -48,7 +46,7 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="16dp"
                 android:layoutDirection="rtl"
-                android:searchHintIcon="@drawable/search"
+                android:searchHintIcon="@drawable/search_icon"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_page_spinner_all" />
 
@@ -102,7 +100,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="40dp"
-                android:src="@drawable/rankings"
+                android:src="@drawable/rankings_icon"
                 app:layout_constraintBottom_toBottomOf="@+id/search_page_curr_page_text"
                 app:layout_constraintStart_toEndOf="@+id/search_page_next_button"
                 app:layout_constraintTop_toTopOf="@+id/search_page_next_button" />

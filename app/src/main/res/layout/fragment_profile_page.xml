@@ -7,102 +7,101 @@
     android:layout_height="match_parent"
     tools:context=".FragmentProfilePage">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="103dp"
-            android:layout_height="96dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/infoMessage_inProfilePage"
-            tools:src="@tools:sample/avatars" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/name_inProfilePage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Current Full Name"
-            app:layout_constraintBottom_toTopOf="@+id/questingSince_inProfilePage"
-            app:layout_constraintStart_toStartOf="@+id/displayName_inProfilePage"
-            app:layout_constraintTop_toBottomOf="@+id/displayName_inProfilePage" />
+            <ImageButton
+                android:id="@+id/imageButton"
+                android:layout_width="103dp"
+                android:layout_height="96dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/infoMessage_inProfilePage"
+                tools:src="@tools:sample/avatars" />
 
-        <EditText
-            android:id="@+id/displayName_inProfilePage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:hint="Current Display Name"
-            app:layout_constraintBottom_toTopOf="@+id/name_inProfilePage"
-            app:layout_constraintStart_toEndOf="@+id/imageButton"
-            app:layout_constraintTop_toTopOf="@+id/imageButton" />
+            <EditText
+                android:id="@+id/name_inProfilePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Current Full Name"
+                app:layout_constraintBottom_toTopOf="@+id/questingSince_inProfilePage"
+                app:layout_constraintStart_toStartOf="@+id/displayName_inProfilePage"
+                app:layout_constraintTop_toBottomOf="@+id/displayName_inProfilePage" />
 
-        <TextView
-            android:id="@+id/questingSince_inProfilePage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Questing Since 2023"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-            app:layout_constraintStart_toStartOf="@+id/name_inProfilePage"
-            app:layout_constraintTop_toBottomOf="@+id/name_inProfilePage" />
+            <EditText
+                android:id="@+id/displayName_inProfilePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:hint="Current Display Name"
+                app:layout_constraintBottom_toTopOf="@+id/name_inProfilePage"
+                app:layout_constraintStart_toEndOf="@+id/imageButton"
+                app:layout_constraintTop_toTopOf="@+id/imageButton" />
 
-        <TextView
-            android:id="@+id/currentQuest_inProfilePage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="72dp"
-            android:text="Current Quest: [xxxx]"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageButton" />
+            <TextView
+                android:id="@+id/questingSince_inProfilePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Questing Since 2023"
+                app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+                app:layout_constraintStart_toStartOf="@+id/name_inProfilePage"
+                app:layout_constraintTop_toBottomOf="@+id/name_inProfilePage" />
 
-        <TextView
-            android:id="@+id/exp_inProfilePage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="EXP: 2000 points"
-            app:layout_constraintEnd_toEndOf="@+id/currentQuest_inProfilePage"
-            app:layout_constraintStart_toStartOf="@+id/currentQuest_inProfilePage"
-            app:layout_constraintTop_toBottomOf="@+id/currentQuest_inProfilePage" />
+            <TextView
+                android:id="@+id/currentQuest_inProfilePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="72dp"
+                android:text="Current Quest: [xxxx]"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageButton" />
 
-        <Button
-            android:id="@+id/travelLogButton_inProfilePage"
-            android:layout_width="185dp"
-            android:layout_height="52dp"
-            android:layout_marginTop="54dp"
-            android:text="Go To Travel Log"
-            app:layout_constraintEnd_toEndOf="@+id/exp_inProfilePage"
-            app:layout_constraintStart_toStartOf="@+id/exp_inProfilePage"
-            app:layout_constraintTop_toBottomOf="@+id/exp_inProfilePage" />
+            <TextView
+                android:id="@+id/exp_inProfilePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="EXP: 2000 points"
+                app:layout_constraintEnd_toEndOf="@+id/currentQuest_inProfilePage"
+                app:layout_constraintStart_toStartOf="@+id/currentQuest_inProfilePage"
+                app:layout_constraintTop_toBottomOf="@+id/currentQuest_inProfilePage" />
 
-        <Button
-            android:id="@+id/updateProfileButton_inProfilePage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Update Profile"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/travelLogButton_inProfilePage" />
+            <Button
+                android:id="@+id/updateProfileButton_inProfilePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Update Profile"
+                app:layout_constraintEnd_toEndOf="@+id/exp_inProfilePage"
+                app:layout_constraintStart_toStartOf="@+id/exp_inProfilePage"
+                app:layout_constraintTop_toBottomOf="@+id/exp_inProfilePage" />
 
-        <TextView
-            android:id="@+id/infoMessage_inProfilePage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="You can update your name, display name, and profile picture!"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/infoMessage_inProfilePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:text="You can update your name, display name, and profile picture!"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="409dp"
+                android:layout_height="333dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/updateProfileButton_inProfilePage" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
