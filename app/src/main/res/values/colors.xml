@@ -7,4 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="quest_light_pink">#FFE3E5</color>
+    <color name="quest_pink">#FF6DBB</color>
+    <color name="quest_blue">#2F345A</color>
+    <color name="quest_gold">#FFD770</color>
+    <color name="quest_cyan">#87DCE9</color>
 </resources>

@@ -12,18 +12,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-public class FragmentStarredQuestsPage extends Fragment {
+public class FragmentStarredPathsPage extends Fragment {
     private ImageButton starred_page_back_to_search;
     private RecyclerView starred_quests_recycler_view;
 
     private FragmentSearchPage.ISearchPage mListener;
 
-    public FragmentStarredQuestsPage() {
+    public FragmentStarredPathsPage() {
         // Required empty public constructor
     }
 
-    public static FragmentStarredQuestsPage newInstance(String param1, String param2) {
-        FragmentStarredQuestsPage fragment = new FragmentStarredQuestsPage();
+    public static FragmentStarredPathsPage newInstance(String param1, String param2) {
+        FragmentStarredPathsPage fragment = new FragmentStarredPathsPage();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -39,7 +39,7 @@ public class FragmentStarredQuestsPage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_starred_quests_page, container, false);
+        View view = inflater.inflate(R.layout.fragment_starred_paths_page, container, false);
         starred_page_back_to_search = view.findViewById(R.id.starred_page_back_to_search);
         starred_quests_recycler_view = view.findViewById(R.id.starred_quests_recycler_view);
 
