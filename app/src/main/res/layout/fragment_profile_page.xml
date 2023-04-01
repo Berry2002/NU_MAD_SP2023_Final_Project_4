@@ -9,11 +9,16 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="@color/quest_light_pink">
 
             <ImageButton
                 android:id="@+id/imageButton"
@@ -29,7 +34,9 @@
                 android:id="@+id/name_inProfilePage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/tccm"
                 android:hint="Current Full Name"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toTopOf="@+id/questingSince_inProfilePage"
                 app:layout_constraintStart_toStartOf="@+id/displayName_inProfilePage"
                 app:layout_constraintTop_toBottomOf="@+id/displayName_inProfilePage" />
@@ -39,7 +46,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
+                android:fontFamily="@font/tccb"
                 android:hint="Current Display Name"
+                android:textColor="@color/quest_pink"
                 app:layout_constraintBottom_toTopOf="@+id/name_inProfilePage"
                 app:layout_constraintStart_toEndOf="@+id/imageButton"
                 app:layout_constraintTop_toTopOf="@+id/imageButton" />
@@ -48,7 +57,9 @@
                 android:id="@+id/questingSince_inProfilePage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/bergen_sans_regular"
                 android:text="Questing Since 2023"
+                android:textColor="@color/quest_pink"
                 app:layout_constraintBottom_toBottomOf="@+id/imageButton"
                 app:layout_constraintStart_toStartOf="@+id/name_inProfilePage"
                 app:layout_constraintTop_toBottomOf="@+id/name_inProfilePage" />
@@ -57,7 +68,9 @@
                 android:id="@+id/currentQuest_inProfilePage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="72dp"
+                android:layout_marginTop="24dp"
+                android:background="@color/quest_gold"
+                android:fontFamily="@font/bergen_sans_semi_bold_italic"
                 android:text="Current Quest: [xxxx]"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
@@ -69,6 +82,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:background="@color/quest_cyan"
+                android:fontFamily="@font/bergen_sans_semi_bold"
                 android:text="EXP: 2000 points"
                 app:layout_constraintEnd_toEndOf="@+id/currentQuest_inProfilePage"
                 app:layout_constraintStart_toStartOf="@+id/currentQuest_inProfilePage"
@@ -80,6 +95,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Update Profile"
+                android:textColor="@color/quest_gold"
+                app:iconTint="@color/quest_pink"
                 app:layout_constraintEnd_toEndOf="@+id/exp_inProfilePage"
                 app:layout_constraintStart_toStartOf="@+id/exp_inProfilePage"
                 app:layout_constraintTop_toBottomOf="@+id/exp_inProfilePage" />
@@ -89,17 +106,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
+                android:fontFamily="@font/bergen_sans_bold"
                 android:text="You can update your name, display name, and profile picture!"
+                android:textAlignment="center"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="409dp"
-                android:layout_height="333dp"
+                android:layout_width="377dp"
+                android:layout_height="344dp"
+                android:background="@color/quest_light_pink"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/travelLog_textView" />
+
+            <TextView
+                android:id="@+id/travelLog_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/bergen_sans_regular"
+                android:text="View Your Travel Log!"
+                app:layout_constraintEnd_toEndOf="@+id/updateProfileButton_inProfilePage"
+                app:layout_constraintStart_toStartOf="@+id/updateProfileButton_inProfilePage"
                 app:layout_constraintTop_toBottomOf="@+id/updateProfileButton_inProfilePage" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

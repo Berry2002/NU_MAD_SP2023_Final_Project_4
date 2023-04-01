@@ -5,11 +5,14 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/quest_light_pink"
     tools:context=".FragmentRankingsPage">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="361dp"
         android:layout_height="350dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="380dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
