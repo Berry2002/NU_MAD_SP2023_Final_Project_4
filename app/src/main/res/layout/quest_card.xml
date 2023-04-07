@@ -126,26 +126,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textView_QuestDescription" />
 
-                    <ImageButton
-                        android:id="@+id/imageButton_UnfilledStar"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@null"
-                        android:scaleType="fitCenter"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/star_button" />
-
-                    <ImageButton
-                        android:id="@+id/imageButton_FilledStar"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@null"
-                        android:scaleType="fitCenter"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/star_button" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
