@@ -9,7 +9,7 @@
     tools:context=".FragmentRankingsPage">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewRankings"
         android:layout_width="361dp"
         android:layout_height="350dp"
         app:layout_constraintBottom_toBottomOf="parent"
