@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.firebase:firebase-firestore:24.1.0'
     def nav_version = "2.5.3"
 
     // Java language implementation
@@ -53,7 +54,8 @@ dependencies {
     // Import the Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:31.3.0')
 
-
+    implementation 'com.google.firebase:firebase-auth:18.0.0'
+    implementation 'com.google.android.gms:play-services-gcm:17.0.0'
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation 'com.google.firebase:firebase-analytics'
