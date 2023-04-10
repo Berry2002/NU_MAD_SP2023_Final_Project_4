@@ -1,5 +1,7 @@
 package com.example.cs5520finalproject;
 
+import static com.example.cs5520finalproject.Tags.USERS;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -16,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -72,7 +75,20 @@ public class FragmentSearchPage extends Fragment {
             mPaths = new ArrayList<>();
             mAuth = FirebaseAuth.getInstance();
             mUser = mAuth.getCurrentUser();
+            currentLocalUser = findLocalUser(mUser);
         }
+    }
+
+    private User findLocalUser(FirebaseUser mUser) {
+        db.collection(USERS)
+                .document(mUser.getEmail())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                    }
+                })
     }
 
     @Override

@@ -1,12 +1,11 @@
 package com.example.cs5520finalproject;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class User {
     private String email, password, displayName, profilePicture;
     private ArrayList<String> travelLog;
-    private Date startDate;
+    private long startDate;
     private int exp;
     private Path currentPath;
     private ArrayList<Path> completedPaths;
@@ -19,7 +18,7 @@ public class User {
     }
 
     public User(String email, String password, String displayName, String profilePicture,
-                ArrayList<String> travelLog, Date startDate, int exp, Path currentPath,
+                ArrayList<String> travelLog, long startDate, int exp, Path currentPath,
                 ArrayList<Path> completedPaths, ArrayList<Path> pathsLeft,
                 ArrayList<Quest> currentQuestsLeft) {
         this.email = email;
@@ -75,11 +74,11 @@ public class User {
         this.travelLog = travelLog;
     }
 
-    public Date getStartDate() {
+    public long getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
