@@ -1,6 +1,6 @@
 package com.example.cs5520finalproject;
 
-import static com.example.cs5520finalproject.Tags.EQUIPPATHPAGE;
+import static com.example.cs5520finalproject.Tags.EQUIP_PATH_PAGE;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -94,7 +94,7 @@ public class FragmentEquipPathPage extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d(EQUIPPATHPAGE, "fetchPathInfo failed");
+                        Log.d(EQUIP_PATH_PAGE, "fetchPathInfo failed");
                     }
                 });
     }
