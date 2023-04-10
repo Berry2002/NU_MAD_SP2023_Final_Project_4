@@ -13,7 +13,8 @@ import android.view.MenuItem;
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
 import com.google.android.material.navigation.NavigationBarView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements PathsAdapter.IPaths, FragmentEquipPathPage.IEquipPath {
 
     ActivityMainBinding binding;
 
@@ -52,5 +53,17 @@ public class MainActivity extends AppCompatActivity {
         this.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
+    }
+
+    // from search paths page to path highlight page
+    @Override
+    public void goToPathHighlights(Path path) {
+        replaceFragment(new FragmentEquipPathPage(path));
+    }
+
+    @Override
+    public void equipPath(Path path) {
+        // could have FragmentProfilePage(path)
+        replaceFragment(new FragmentProfilePage());
     }
 }

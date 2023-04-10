@@ -15,6 +15,20 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Document;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class FragmentSearchPage extends Fragment {
     private Spinner search_page_spinner_path, search_page_spinner_all;
 
@@ -26,10 +40,21 @@ public class FragmentSearchPage extends Fragment {
 
     private TextView search_page_curr_page_text;
 
-//    private ISearchPage mListener;
+    private ArrayList<Path> mPaths; // all incomplete paths for currentLocalUser
+    private FirebaseFirestore db;
+    private User currentLocalUser;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+
+    private PathsAdapter.IPaths mListener;
 
     public FragmentSearchPage() {
         // Required empty public constructor
+    }
+
+    public FragmentSearchPage(User currentLocalUser, ArrayList<Path> mPaths) {
+        this.currentLocalUser = currentLocalUser;
+        this.mPaths = mPaths;
     }
 
     public static FragmentSearchPage newInstance(String param1, String param2) {
@@ -43,6 +68,10 @@ public class FragmentSearchPage extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            db = FirebaseFirestore.getInstance();
+            mPaths = new ArrayList<>();
+            mAuth = FirebaseAuth.getInstance();
+            mUser = mAuth.getCurrentUser();
         }
     }
 
@@ -59,17 +88,33 @@ public class FragmentSearchPage extends Fragment {
         search_page_next_button = view.findViewById(R.id.search_page_next_button);
         search_page_curr_page_text = view.findViewById(R.id.search_page_curr_page_text);
 
+        fetchCurrentPaths();
+
         return view;
     }
 
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//        if (context instanceof ISearchPage){
-//            this.mListener = (ISearchPage) context;
-//        } else{
-//            throw new RuntimeException(context.toString()
-//                    + "must implement ISearchPage");
-//        }
-//    }
+    private void fetchCurrentPaths() {
+        ArrayList<Path> paths = new ArrayList<>();
+//        db.collection("users")
+//                .document(mUser.getEmail())
+//                .collection("paths")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//
+//                    }
+//                });
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof PathsAdapter.IPaths){
+            this.mListener = (PathsAdapter.IPaths) context;
+        } else{
+            throw new RuntimeException(context.toString()
+                    + "must implement ISearchPage");
+        }
+    }
 }
