@@ -10,6 +10,8 @@ public class User {
     private int exp;
     private Path currentPath;
     private ArrayList<Path> completedPaths;
+
+    private ArrayList<Path> pathsLeft;
     private ArrayList<Quest> currentQuestsLeft;
 
     public User() {
@@ -18,7 +20,8 @@ public class User {
 
     public User(String email, String password, String displayName, String profilePicture,
                 ArrayList<String> travelLog, Date startDate, int exp, Path currentPath,
-                ArrayList<Path> completedPaths, ArrayList<Quest> currentQuestsLeft) {
+                ArrayList<Path> completedPaths, ArrayList<Path> pathsLeft,
+                ArrayList<Quest> currentQuestsLeft) {
         this.email = email;
         this.password = password;
         this.displayName = displayName;
@@ -28,6 +31,7 @@ public class User {
         this.exp = exp;
         this.currentPath = currentPath;
         this.completedPaths = completedPaths;
+        this.pathsLeft = pathsLeft;
         this.currentQuestsLeft = currentQuestsLeft;
     }
 
@@ -109,5 +113,13 @@ public class User {
 
     public void setCurrentQuestsLeft(ArrayList<Quest> currentQuestsLeft) {
         this.currentQuestsLeft = currentQuestsLeft;
+    }
+
+    public ArrayList<Path> getPathsLeft() {
+        return pathsLeft;
+    }
+
+    public void setPathsLeft(ArrayList<Path> pathsLeft) {
+        this.pathsLeft = pathsLeft;
     }
 }
