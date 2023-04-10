@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -46,20 +47,23 @@ public class FragmentSearchPage extends Fragment {
     private TextView search_page_curr_page_text;
 
     private ArrayList<Path> mPaths; // all incomplete paths for currentLocalUser
+
     private FirebaseFirestore db;
     private User currentLocalUser;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
 
+    private PathsAdapter pathsAdapter;
+
+    private RecyclerView.LayoutManager recyclerViewLayoutManager;
     private PathsAdapter.IPaths mListener;
 
     public FragmentSearchPage() {
         // Required empty public constructor
     }
 
-    public FragmentSearchPage(User currentLocalUser, ArrayList<Path> mPaths) {
-        this.currentLocalUser = currentLocalUser;
-        this.mPaths = mPaths;
+    public FragmentSearchPage(User user) {
+        this.currentLocalUser = user;
     }
 
     public static FragmentSearchPage newInstance(String param1, String param2) {
@@ -74,52 +78,41 @@ public class FragmentSearchPage extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             db = FirebaseFirestore.getInstance();
-            mPaths = new ArrayList<>();
+            mPaths = fetchCurrentPathsLeft(currentLocalUser);
             mAuth = FirebaseAuth.getInstance();
             mUser = mAuth.getCurrentUser();
-            currentLocalUser = findLocalUser(mUser);
         }
     }
 
-    private User findLocalUser(FirebaseUser mUser) {
-        final User[] localUser = {new User()};
-        db.collection(USERS)
-                .document(mUser.getEmail())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        localUser[0] = documentSnapshot.toObject(User.class);
-                    }
-                });
-        return localUser[0];
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_search_page, container, false);
         search_page_spinner_path = view.findViewById(R.id.search_page_spinner_path);
         search_page_spinner_all = view.findViewById(R.id.search_page_spinner_all);
         search_page_search_bar = view.findViewById(R.id.search_page_search_bar);
-        search_page_recycler_view = view.findViewById(R.id.search_page_recycler_view);
         search_page_prev_button = view.findViewById(R.id.search_page_prev_button);
         search_page_next_button = view.findViewById(R.id.search_page_next_button);
         search_page_curr_page_text = view.findViewById(R.id.search_page_curr_page_text);
 
-        fetchCurrentPathsLeft(currentLocalUser);
+        // set up recycler view
+        search_page_recycler_view = view.findViewById(R.id.search_page_recycler_view);
+        recyclerViewLayoutManager = new LinearLayoutManager(getContext());
+        pathsAdapter = new PathsAdapter(mPaths, getContext());
+        search_page_recycler_view.setLayoutManager(recyclerViewLayoutManager);
+        search_page_recycler_view.setAdapter(pathsAdapter);
 
         return view;
     }
 
+
     // get paths left for the current user
-    private ArrayList<String> fetchCurrentPathsLeft(User user) {
+    private ArrayList<Path> fetchCurrentPathsLeft(User user) {
         ArrayList<String> completedPaths = currentLocalUser.getCompletedPaths();
-        ArrayList<String> allPaths = new ArrayList<>();
-        db.collection(USERS)
-                .document(user.getEmail())
-                .collection(PATHS)
+        ArrayList<Path> allPaths = new ArrayList<>();
+        db.collection(PATHS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -127,12 +120,13 @@ public class FragmentSearchPage extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot: task.getResult()) {
                                 Path path = documentSnapshot.toObject(Path.class);
-                                allPaths.add(path.getLocation());
+                                if (!completedPaths.contains(path.getLocation())) {
+                                    allPaths.add(path);
+                                }
                             }
                         }
                     }
                 });
-        allPaths.removeAll(completedPaths);
         return allPaths;
     }
 
