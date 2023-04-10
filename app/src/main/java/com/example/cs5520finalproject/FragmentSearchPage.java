@@ -1,5 +1,8 @@
 package com.example.cs5520finalproject;
 
+import static com.example.cs5520finalproject.Tags.PATHS;
+import static com.example.cs5520finalproject.Tags.USERS;
+
 import android.content.Context;
 import android.os.Bundle;
 
@@ -16,12 +19,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Document;
@@ -72,7 +77,22 @@ public class FragmentSearchPage extends Fragment {
             mPaths = new ArrayList<>();
             mAuth = FirebaseAuth.getInstance();
             mUser = mAuth.getCurrentUser();
+            currentLocalUser = findLocalUser(mUser);
         }
+    }
+
+    private User findLocalUser(FirebaseUser mUser) {
+        final User[] localUser = {new User()};
+        db.collection(USERS)
+                .document(mUser.getEmail())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        localUser[0] = documentSnapshot.toObject(User.class);
+                    }
+                });
+        return localUser[0];
     }
 
     @Override
@@ -88,23 +108,32 @@ public class FragmentSearchPage extends Fragment {
         search_page_next_button = view.findViewById(R.id.search_page_next_button);
         search_page_curr_page_text = view.findViewById(R.id.search_page_curr_page_text);
 
-        fetchCurrentPaths();
+        fetchCurrentPathsLeft(currentLocalUser);
 
         return view;
     }
 
-    private void fetchCurrentPaths() {
-        ArrayList<Path> paths = new ArrayList<>();
-//        db.collection("users")
-//                .document(mUser.getEmail())
-//                .collection("paths")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//
-//                    }
-//                });
+    // get paths left for the current user
+    private ArrayList<String> fetchCurrentPathsLeft(User user) {
+        ArrayList<String> completedPaths = currentLocalUser.getCompletedPaths();
+        ArrayList<String> allPaths = new ArrayList<>();
+        db.collection(USERS)
+                .document(user.getEmail())
+                .collection(PATHS)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot: task.getResult()) {
+                                Path path = documentSnapshot.toObject(Path.class);
+                                allPaths.add(path.getLocation());
+                            }
+                        }
+                    }
+                });
+        allPaths.removeAll(completedPaths);
+        return allPaths;
     }
 
     @Override
