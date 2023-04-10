@@ -8,10 +8,8 @@ public class User {
     private long startDate;
     private int exp;
     private Path currentPath;
-    private ArrayList<Path> completedPaths;
-
-    private ArrayList<Path> pathsLeft;
-    private ArrayList<Quest> currentQuestsLeft;
+    private ArrayList<String> completedPaths;
+    private ArrayList<String> completedQuests;
 
     public User() {
 
@@ -19,8 +17,7 @@ public class User {
 
     public User(String email, String password, String displayName, String profilePicture,
                 ArrayList<String> travelLog, long startDate, int exp, Path currentPath,
-                ArrayList<Path> completedPaths, ArrayList<Path> pathsLeft,
-                ArrayList<Quest> currentQuestsLeft) {
+                ArrayList<String> completedPaths, ArrayList<String> completedQuests) {
         this.email = email;
         this.password = password;
         this.displayName = displayName;
@@ -30,8 +27,7 @@ public class User {
         this.exp = exp;
         this.currentPath = currentPath;
         this.completedPaths = completedPaths;
-        this.pathsLeft = pathsLeft;
-        this.currentQuestsLeft = currentQuestsLeft;
+        this.completedQuests = completedQuests;
     }
 
     public String getEmail() {
@@ -98,27 +94,19 @@ public class User {
         this.currentPath = currentPath;
     }
 
-    public ArrayList<Path> getCompletedPaths() {
+    public ArrayList<String> getCompletedPaths() {
         return completedPaths;
     }
 
-    public void setCompletedPaths(ArrayList<Path> completedPaths) {
+    public void setCompletedPaths(ArrayList<String> completedPaths) {
         this.completedPaths = completedPaths;
     }
 
-    public ArrayList<Quest> getCurrentQuestsLeft() {
-        return currentQuestsLeft;
+    public ArrayList<String> getCompletedQuests() {
+        return completedQuests;
     }
 
-    public void setCurrentQuestsLeft(ArrayList<Quest> currentQuestsLeft) {
-        this.currentQuestsLeft = currentQuestsLeft;
-    }
-
-    public ArrayList<Path> getPathsLeft() {
-        return pathsLeft;
-    }
-
-    public void setPathsLeft(ArrayList<Path> pathsLeft) {
-        this.pathsLeft = pathsLeft;
+    public void setCompletedQuests(ArrayList<String> completedQuests) {
+        this.completedQuests = completedQuests;
     }
 }

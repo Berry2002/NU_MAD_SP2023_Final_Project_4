@@ -8,6 +8,8 @@ public class Path {
     private ArrayList<Quest> quests;
     private ArrayList<Review> review;
 
+    private int numOfQuests;
+
     public Path() {
 
     }
@@ -20,6 +22,7 @@ public class Path {
         this.image = image;
         this.quests = quests;
         this.review = review;
+        this.numOfQuests = this.quests.size();
     }
 
     public String getLocation() {
@@ -68,5 +71,13 @@ public class Path {
 
     public void setReview(ArrayList<Review> review) {
         this.review = review;
+    }
+
+    public int getNumOfQuests() {
+        return numOfQuests;
+    }
+
+    public void setNumOfQuests(int numOfQuests) {
+        this.numOfQuests = numOfQuests;
     }
 }
