@@ -7,7 +7,6 @@ public class Path {
     private String location, subject, description, image;
     private ArrayList<Quest> quests;
     private ArrayList<Review> review;
-
     private int numOfQuests;
 
     public Path() {

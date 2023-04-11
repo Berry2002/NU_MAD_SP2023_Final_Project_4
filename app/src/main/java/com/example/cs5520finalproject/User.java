@@ -1,6 +1,7 @@
 package com.example.cs5520finalproject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class User {
     private String email, password, displayName, profilePicture;
@@ -28,6 +29,19 @@ public class User {
         this.currentPath = currentPath;
         this.completedPaths = completedPaths;
         this.completedQuests = completedQuests;
+    }
+
+    public User(String displayName, String email, String password) {
+        this.email = email;
+        this.password = password;
+        this.displayName = displayName;
+        this.profilePicture = null;
+        this.travelLog = new ArrayList<String>();
+        this.startDate = new Date().getTime();
+        this.exp = 0;
+        this.currentPath = null;
+        this.completedPaths = new ArrayList<String>();
+        this.completedQuests = new ArrayList<String>();
     }
 
     public String getEmail() {

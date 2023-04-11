@@ -32,7 +32,7 @@ public class FragmentEquipPathPage extends Fragment {
 
     private FirebaseFirestore db;
 
-    private IEquipPath mListener;
+    private IFragmentToMainActivity mListener;
 
     public FragmentEquipPathPage() {
         // Required empty public constructor
@@ -101,14 +101,10 @@ public class FragmentEquipPathPage extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof IEquipPath){
-            mListener = (IEquipPath) context;
+        if(context instanceof IFragmentToMainActivity){
+            mListener = (IFragmentToMainActivity) context;
         } else{
             throw new RuntimeException(context.toString()+ "must implement IEquipPath");
         }
-    }
-
-    public interface IEquipPath {
-        void equipPath(Path path);
     }
 }

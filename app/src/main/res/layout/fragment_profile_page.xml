@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:isScrollContainer="true"
     tools:context=".FragmentProfilePage">
 
     <ScrollView
@@ -43,14 +44,15 @@
 
             <TextView
                 android:id="@+id/questingSince_inProfilePage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="139dp"
+                android:layout_height="49dp"
+                android:ellipsize="end"
                 android:fontFamily="@font/bergen_sans_regular"
                 android:text="Questing Since 2023"
                 android:textColor="@color/quest_pink"
                 app:layout_constraintBottom_toBottomOf="@+id/profilePicture_inProfilePage"
-                app:layout_constraintTop_toBottomOf="@+id/displayName_inProfilePage"
-                tools:layout_editor_absoluteX="193dp" />
+                app:layout_constraintStart_toStartOf="@+id/displayName_inProfilePage"
+                app:layout_constraintTop_toBottomOf="@+id/displayName_inProfilePage" />
 
             <TextView
                 android:id="@+id/currentPath_inProfilePage"
@@ -93,18 +95,18 @@
                 android:id="@+id/infoMessage_inProfilePage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
                 android:fontFamily="@font/bergen_sans_bold"
-                android:text="You can update your name, display name, and profile picture!"
+                android:text="You can update your display name and profile picture!"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/logoutButton_profilePage" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="377dp"
-                android:layout_height="344dp"
+                android:layout_width="378dp"
+                android:layout_height="357dp"
+                android:layout_marginTop="4dp"
                 android:background="@color/quest_light_pink"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -120,6 +122,18 @@
                 app:layout_constraintEnd_toEndOf="@+id/updateProfileButton_inProfilePage"
                 app:layout_constraintStart_toStartOf="@+id/updateProfileButton_inProfilePage"
                 app:layout_constraintTop_toBottomOf="@+id/updateProfileButton_inProfilePage" />
+
+            <ImageButton
+                android:id="@+id/logoutButton_profilePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="@color/quest_light_pink"
+                android:foregroundTint="@color/black"
+                android:src="@android:drawable/ic_lock_power_off"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

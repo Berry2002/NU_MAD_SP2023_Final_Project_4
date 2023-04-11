@@ -1,8 +1,5 @@
 package com.example.cs5520finalproject;
 
-import static com.example.cs5520finalproject.Tags.PATHS;
-import static com.example.cs5520finalproject.Tags.USERS;
-
 import android.content.Context;
 import android.os.Bundle;
 
@@ -20,19 +17,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import org.w3c.dom.Document;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class FragmentSearchPage extends Fragment {
@@ -56,7 +47,7 @@ public class FragmentSearchPage extends Fragment {
     private PathsAdapter pathsAdapter;
 
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
-    private PathsAdapter.IPaths mListener;
+    private IFragmentToMainActivity mListener;
 
     public FragmentSearchPage() {
         // Required empty public constructor
@@ -112,7 +103,7 @@ public class FragmentSearchPage extends Fragment {
     private ArrayList<Path> fetchCurrentPathsLeft(User user) {
         ArrayList<String> completedPaths = currentLocalUser.getCompletedPaths();
         ArrayList<Path> allPaths = new ArrayList<>();
-        db.collection(PATHS)
+        db.collection(Tags.PATHS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -133,11 +124,10 @@ public class FragmentSearchPage extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof PathsAdapter.IPaths){
-            this.mListener = (PathsAdapter.IPaths) context;
+        if (context instanceof IFragmentToMainActivity) {
+            this.mListener = (IFragmentToMainActivity) context;
         } else{
-            throw new RuntimeException(context.toString()
-                    + "must implement ISearchPage");
+            throw new RuntimeException(context + " must implement IFragmentToMainActivity");
         }
     }
 }

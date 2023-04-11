@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> {
 
-    private IPaths mListener;
+    private IFragmentToMainActivity mListener;
 
     ArrayList<Path> mPaths;
 
@@ -25,10 +25,10 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
 
     public PathsAdapter(ArrayList<Path> mPaths, Context context) {
         this.mPaths = mPaths;
-        if(context instanceof IPaths){
-            this.mListener = (IPaths) context;
+        if(context instanceof IFragmentToMainActivity){
+            this.mListener = (IFragmentToMainActivity) context;
         } else{
-            throw new RuntimeException(context.toString()+ "must implement IPaths");
+            throw new RuntimeException(context.toString()+ "must implement IFragmentToMainActivity");
         }
     }
 
@@ -76,9 +76,6 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
     @Override
     public int getItemCount() {
         return this.mPaths.size();
-    }
-    public interface IPaths {
-        void goToPathHighlights(Path path);
     }
 }
 

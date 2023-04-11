@@ -7,4 +7,10 @@
     <string name="quest_title_dummy_data">Create with a Local Master</string>
     <string name="quest_summary_dummy_data">Take one of our locals\' offered ceramics workshops!</string>
     <string name="quest_description_dummy_data">Sign up for a local workshop, show up and get your hands dirty, and capture a picture of your work!</string>
+    <string name="registerButton_message">Register</string>
+    <string name="loginButton_message">Login</string>
+    <string name="email_message">Enter your email</string>
+    <string name="password_hint">Enter your password</string>
+    <string name="displayName_message">Enter your display name</string>
+    <string name="confirmPassword_hint">Confrim your password</string>
 </resources>

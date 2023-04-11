@@ -1,7 +1,9 @@
 package com.example.cs5520finalproject;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -21,6 +23,10 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+
 public class FragmentProfilePage extends Fragment {
 
     private FirebaseAuth mAuth;
@@ -30,14 +36,15 @@ public class FragmentProfilePage extends Fragment {
     private EditText displayName;
     private TextView currentPath, exp, questingSince;
     private Button updateProfile;
-    private ImageButton profilePicture;
+    private ImageButton profilePicture, logOutButton;
+    private IFragmentToMainActivity pathway;
 
     public FragmentProfilePage() {
         // Required empty public constructor
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
         this.currentUser = this.mAuth.getCurrentUser();
-        this.db.collection(Tags.FIREBASE_USERS).document(this.currentUser.getEmail()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        this.db.collection(Tags.USERS).document(this.currentUser.getEmail()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 if (error != null) {
@@ -49,9 +56,25 @@ public class FragmentProfilePage extends Fragment {
         });
     }
 
+    public FragmentProfilePage(User currentUserLocalType) {
+        this.currentUserLocalType = currentUserLocalType;
+        this.db = FirebaseFirestore.getInstance();
+        this.mAuth = FirebaseAuth.getInstance(); // don't know if i'll need this
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof IFragmentToMainActivity) {
+            this.pathway = (IFragmentToMainActivity) context;
+        } else {
+            throw new IllegalStateException(context + " should implement IFragmentToMainActivity");
+        }
     }
 
     @Override
@@ -67,11 +90,30 @@ public class FragmentProfilePage extends Fragment {
         this.exp = view.findViewById(R.id.exp_inProfilePage);
         this.updateProfile = view.findViewById(R.id.updateProfileButton_inProfilePage);
         this.questingSince = view.findViewById(R.id.questingSince_inProfilePage);
+        this.logOutButton = view.findViewById(R.id.logoutButton_profilePage);
+
+        this.logOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pathway.logout();
+            }
+        });
 
         // call the method to fetch the data
+        if (this.currentUserLocalType != null) {
+            this.displayName.setText(this.currentUserLocalType.getDisplayName());
+            if (this.currentUserLocalType.getCurrentPath() != null) { // set the current path
+                this.currentPath.setText(this.currentUserLocalType.getCurrentPath().getLocation());
+            } else {
+                this.currentPath.setText("No path equipped currently.");
+            }
+            this.exp.setText(String.format("EXP: %d points", this.currentUserLocalType.getExp()));
+            LocalDate localDate = Instant.ofEpochMilli(this.currentUserLocalType.getStartDate())
+                    .atZone(ZoneId.systemDefault()).toLocalDate();
+            this.questingSince.setText(String.format("Questing since: %s %s, %s",
+                    localDate.getDayOfMonth(), localDate.getMonth(), localDate.getYear()));
+        }
 
         return view;
     }
-
-
 }
