@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void equipPath(Path path) {
-//        replaceFragment(new FragmentQuestHomePage(currentUserLocalType));
         this.updateCurrentPath(path);
         this.updateQuestsCompleted();
         this.populateScreen();
