@@ -8,7 +8,7 @@ public class User {
     private ArrayList<String> travelLog;
     private long startDate;
     private int exp;
-    private Path currentPath;
+    private String currentPath;
     private ArrayList<String> completedPaths;
     private ArrayList<String> completedQuests;
 
@@ -17,7 +17,7 @@ public class User {
     }
 
     public User(String email, String password, String displayName, String profilePicture,
-                ArrayList<String> travelLog, long startDate, int exp, Path currentPath,
+                ArrayList<String> travelLog, long startDate, int exp, String currentPath,
                 ArrayList<String> completedPaths, ArrayList<String> completedQuests) {
         this.email = email;
         this.password = password;
@@ -100,11 +100,11 @@ public class User {
         this.exp = exp;
     }
 
-    public Path getCurrentPath() {
+    public String getCurrentPath() {
         return currentPath;
     }
 
-    public void setCurrentPath(Path currentPath) {
+    public void setCurrentPath(String currentPath) {
         this.currentPath = currentPath;
     }
 

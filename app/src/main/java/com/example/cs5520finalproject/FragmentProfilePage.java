@@ -134,7 +134,7 @@ public class FragmentProfilePage extends Fragment {
         if (this.currentUserLocalType != null) {
             this.displayName.setText(this.currentUserLocalType.getDisplayName());
             if (this.currentUserLocalType.getCurrentPath() != null) { // set the current path
-                this.currentPath.setText(this.currentUserLocalType.getCurrentPath().getLocation());
+                this.currentPath.setText(String.format("Current Path: %s", this.currentUserLocalType.getCurrentPath()));
             } else {
                 this.currentPath.setText("No path equipped currently.");
             }

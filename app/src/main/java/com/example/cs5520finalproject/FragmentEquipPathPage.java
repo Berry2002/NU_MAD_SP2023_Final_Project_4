@@ -1,14 +1,12 @@
 package com.example.cs5520finalproject;
 
-import static com.example.cs5520finalproject.Tags.EQUIP_PATH_PAGE;
-
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FragmentEquipPathPage extends Fragment {
@@ -29,8 +24,6 @@ public class FragmentEquipPathPage extends Fragment {
     private ImageView imageViewEquipPath;
 
     private Path selectedPath;
-
-    private FirebaseFirestore db;
 
     private IFragmentToMainActivity mListener;
 
@@ -45,7 +38,7 @@ public class FragmentEquipPathPage extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            db = FirebaseFirestore.getInstance();
+
         }
     }
 
@@ -59,10 +52,10 @@ public class FragmentEquipPathPage extends Fragment {
         buttonEquipPath = view.findViewById(R.id.buttonEquipPath);
         imageViewEquipPath = view.findViewById(R.id.imageViewEquipPath);
 
-        fetchCurrentPath(selectedPath);
+        setCurrentPathInfo(selectedPath);
 
         // jump to home page displaying list of quests contained in this path
-        imageViewEquipPath.setOnClickListener(new View.OnClickListener() {
+        buttonEquipPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.equipPath(selectedPath);
@@ -72,31 +65,15 @@ public class FragmentEquipPathPage extends Fragment {
         return view;
     }
 
-    private void fetchCurrentPath(Path path) {
-        DocumentReference mPath = db.collection("paths")
-                .document(path.getLocation()); // get document path location??
+    private void setCurrentPathInfo(Path path) {
+        textViewEquipPathName.setText(
+                new StringBuilder(path.getLocation() + " - "
+                        + path.getSubject()));
+        textViewEquipPathDescription.setText(path.getDescription());
 
-        // get path document
-        mPath.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                        // set corresponding path info
-                        textViewEquipPathName.setText(
-                                new StringBuilder(selectedPath.getLocation()
-                                        + " - "
-                                        + selectedPath.getSubject()));
-                        textViewEquipPathDescription.setText(selectedPath.getDescription());
-                        imageViewEquipPath.setImageResource(Integer.parseInt(selectedPath.getImage()));//imageurl???
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(EQUIP_PATH_PAGE, "fetchPathInfo failed");
-                    }
-                });
+        Glide.with(this)
+                .load(Uri.parse(path.getImage()))
+                .into(imageViewEquipPath);
     }
     @Override
     public void onAttach(@NonNull Context context) {
@@ -104,7 +81,7 @@ public class FragmentEquipPathPage extends Fragment {
         if(context instanceof IFragmentToMainActivity){
             mListener = (IFragmentToMainActivity) context;
         } else{
-            throw new RuntimeException(context.toString()+ "must implement IEquipPath");
+            throw new RuntimeException(context.toString()+ "must implement IFragmentToMainActivity");
         }
     }
 }
