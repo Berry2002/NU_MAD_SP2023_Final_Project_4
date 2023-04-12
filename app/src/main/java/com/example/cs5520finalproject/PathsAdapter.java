@@ -1,6 +1,8 @@
 package com.example.cs5520finalproject;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> {
@@ -18,6 +22,8 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
     private IFragmentToMainActivity mListener;
 
     ArrayList<Path> mPaths;
+
+    private Context context;
 
     public PathsAdapter() {
 
@@ -27,6 +33,7 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
         this.mPaths = mPaths;
         if(context instanceof IFragmentToMainActivity){
             this.mListener = (IFragmentToMainActivity) context;
+            this.context = context;
         } else{
             throw new RuntimeException(context.toString()+ "must implement IFragmentToMainActivity");
         }
@@ -50,6 +57,7 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d("PathsAdapter", "here");
         View itemRecyclerView = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.path_card,parent, false);
@@ -63,7 +71,11 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
 
         holder.textViewPathDescription.setText(currentPath.getDescription());
         holder.textViewSubject.setText(currentPath.getSubject());
-        holder.imageViewPath.setImageResource(Integer.parseInt(currentPath.getImage()));
+
+        Glide.with(this.context)
+                .load(Uri.parse(currentPath.getImage()))
+                .into(holder.imageViewPath);
+
         holder.textViewPathLocation.setText(currentPath.getLocation());
         holder.buttonSeePathHighlights.setOnClickListener(new View.OnClickListener() {
             @Override

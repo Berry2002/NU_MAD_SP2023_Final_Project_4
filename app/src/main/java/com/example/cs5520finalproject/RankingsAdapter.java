@@ -40,7 +40,11 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        User friend = friends.get(position);
+        String name = friend.getDisplayName();
+        int ranking = position + 1;
+        int exp = friend.getExp();
+        long startDate = friend.getStartDate();
     }
 
     @Override

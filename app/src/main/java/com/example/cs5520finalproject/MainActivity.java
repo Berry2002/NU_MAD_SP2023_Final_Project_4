@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
                         goToProfilePage();
                         break;
                     case (R.id.fragmentSearchPage):
-                        replaceFragment(new FragmentSearchPage());
+                        replaceFragment(new FragmentSearchPage(currentUserLocalType));
                         break;
                     case (R.id.fragmentRankingsPage):
                         replaceFragment(new FragmentRankingsPage());
@@ -76,9 +76,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void equipPath(Path path) {
-        // why are we calling profile page when we equip the path? shouldn't we call home page?
-        // could have FragmentProfilePage(path)
-        // replaceFragment(new FragmentProfilePage());
+//        replaceFragment(new FragmentQuestHomePage(currentUserLocalType));
         this.updateCurrentPath(path);
         this.updateQuestsCompleted();
         this.populateScreen();
@@ -179,7 +177,7 @@ public class MainActivity extends AppCompatActivity
                         if (!task.isSuccessful()) {
                             Log.e("equip path", "onComplete: could not update the current path");
                         } else {
-                            currentUserLocalType.setCurrentPath(path);
+                            currentUserLocalType.setCurrentPath(path.getLocation());
 
                         }
                     }

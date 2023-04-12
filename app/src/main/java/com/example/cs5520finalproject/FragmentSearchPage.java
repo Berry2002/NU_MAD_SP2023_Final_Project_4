@@ -41,8 +41,6 @@ public class FragmentSearchPage extends Fragment {
 
     private FirebaseFirestore db;
     private User currentLocalUser;
-    private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
 
     private PathsAdapter pathsAdapter;
 
@@ -55,31 +53,25 @@ public class FragmentSearchPage extends Fragment {
 
     public FragmentSearchPage(User user) {
         this.currentLocalUser = user;
-    }
-
-    public static FragmentSearchPage newInstance(String param1, String param2) {
-        FragmentSearchPage fragment = new FragmentSearchPage();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        this.db = FirebaseFirestore.getInstance();
+        this.mPaths = new ArrayList<>();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            db = FirebaseFirestore.getInstance();
-            mPaths = fetchCurrentPathsLeft(currentLocalUser);
-            mAuth = FirebaseAuth.getInstance();
-            mUser = mAuth.getCurrentUser();
+
         }
     }
-
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // get paths left for the current User
+        this.mPaths = fetchCurrentPathsLeft(currentLocalUser);
+
         View view = inflater.inflate(R.layout.fragment_search_page, container, false);
         search_page_spinner_path = view.findViewById(R.id.search_page_spinner_path);
         search_page_spinner_all = view.findViewById(R.id.search_page_spinner_all);
@@ -101,8 +93,10 @@ public class FragmentSearchPage extends Fragment {
 
     // get paths left for the current user
     private ArrayList<Path> fetchCurrentPathsLeft(User user) {
-        ArrayList<String> completedPaths = currentLocalUser.getCompletedPaths();
+        ArrayList<String> completedPaths = user.getCompletedPaths();
         ArrayList<Path> allPaths = new ArrayList<>();
+
+        // get all paths in Firebase
         db.collection(Tags.PATHS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -115,6 +109,7 @@ public class FragmentSearchPage extends Fragment {
                                     allPaths.add(path);
                                 }
                             }
+                            pathsAdapter.notifyDataSetChanged();
                         }
                     }
                 });
