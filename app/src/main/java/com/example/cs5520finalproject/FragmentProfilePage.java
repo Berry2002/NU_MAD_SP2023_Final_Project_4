@@ -1,6 +1,7 @@
 package com.example.cs5520finalproject;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,9 +16,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,6 +43,7 @@ public class FragmentProfilePage extends Fragment {
     private Button updateProfile;
     private ImageButton profilePicture, logOutButton;
     private IFragmentToMainActivity pathway;
+    private boolean displayNameUpdated, profilePictureUpdated;
 
     public FragmentProfilePage() {
         // Required empty public constructor
@@ -54,12 +60,15 @@ public class FragmentProfilePage extends Fragment {
                 }
             }
         });
+        this.displayNameUpdated = false;
+        this.profilePictureUpdated = false;
     }
 
     public FragmentProfilePage(User currentUserLocalType) {
         this.currentUserLocalType = currentUserLocalType;
         this.db = FirebaseFirestore.getInstance();
         this.mAuth = FirebaseAuth.getInstance(); // don't know if i'll need this
+        this.currentUser = mAuth.getCurrentUser();
     }
 
     @Override
@@ -92,10 +101,32 @@ public class FragmentProfilePage extends Fragment {
         this.questingSince = view.findViewById(R.id.questingSince_inProfilePage);
         this.logOutButton = view.findViewById(R.id.logoutButton_profilePage);
 
+        this.displayName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                displayNameUpdated = true;
+            }
+        });
+
+        this.profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                profilePictureUpdated = true;
+                // prompt the user to open their device and select a photo to upload
+            }
+        });
+
         this.logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pathway.logout();
+            }
+        });
+
+        this.updateProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateProfileInDatabase();
             }
         });
 
@@ -115,5 +146,56 @@ public class FragmentProfilePage extends Fragment {
         }
 
         return view;
+    }
+
+    private void updateProfileInDatabase() {
+        // basically collect all the information and update the profile information
+        // collect the name and the profile picture
+
+        UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
+
+        if (this.displayNameUpdated) {
+            this.currentUserLocalType.setDisplayName(this.displayName.getText().toString());
+            builder.setDisplayName(this.currentUserLocalType.getDisplayName());
+            this.updateProfileInformationOnFirestore(Tags.USERS_DISPLAY_NAME, this.currentUserLocalType.getDisplayName());
+        }
+
+        if (this.profilePictureUpdated) {
+            // fill this in after the camera X features are implemented
+            builder.setPhotoUri(Uri.parse(this.currentUserLocalType.getProfilePicture()));
+            this.updateProfileInformationOnFirestore(Tags.USERS_PROFILE_PICTURE, this.currentUserLocalType.getProfilePicture());
+        }
+
+        this.currentUser.updateProfile(builder.build())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // reload information
+                            Toast.makeText(getContext(), "Profile information updated on Firebase successfully!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    void updateProfileInformationOnFirestore(String field, String information) {
+        Log.d("profile page fragment", "updateProfileInformationOnFirestore: user == null" + (this.currentUser == null));
+        Log.d("profile page fragment", "updateProfileInformationOnFirestore: db == null" + (this.db == null));
+        Log.d("profile page fragment", "updateProfileInformationOnFirestore: user email == null" + (currentUser == null));
+        this.db.collection(Tags.USERS).document(this.currentUserLocalType.getEmail())
+                .update(field, information)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getContext(), String.format("%s updated on Firestore successfully!", field),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Log.e("update profile information on firestore",
+                                    String.format("onComplete: could not update %s information on Firestore", field));
+                        }
+                    }
+                });
     }
 }
