@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -102,8 +104,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void goToHomePage(FirebaseUser currentUser) {
         this.currentUser = currentUser;
-        this.switchToHomePageFragment();
-
+        this.populateScreen();
     }
 
     @Override
@@ -114,9 +115,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void populateScreen() {
+        BottomNavigationView navBar = findViewById(R.id.bottomNavView);
         if (this.currentUser == null) { // if no user is logged in, we prompt login/register
             replaceFragment(new FragmentAuthentication());
+            navBar.setVisibility(View.GONE);
         } else { // go to the current user's home page
+            navBar.setVisibility(View.VISIBLE);
             this.switchToHomePageFragment();
         }
     }
