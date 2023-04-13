@@ -1,5 +1,7 @@
 package com.example.cs5520finalproject;
 
+import static java.security.AccessController.getContext;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -78,9 +81,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void equipPath(Path path) {
-        this.updateCurrentPath(path);
-        this.updateQuestsCompleted();
-        this.populateScreen();
+        // can only start path if they have no current path
+        if (currentUserLocalType.getCurrentPath() == null) {
+            this.updateCurrentPath(path);
+            this.updateQuestsCompleted();
+            this.populateScreen();
+        } else {
+            Toast.makeText(this,
+                    "Please finish the current path before starting another one!",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void goToProfilePage() {
@@ -111,6 +121,12 @@ public class MainActivity extends AppCompatActivity
         this.mAuth.signOut();
         this.currentUser = null;
         this.populateScreen();
+    }
+
+    @Override
+    public void leaveCurrentPath() {
+        Path newPath = new Path();
+        this.updateCurrentPath(newPath);
     }
 
     private void populateScreen() {
@@ -173,7 +189,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateCurrentPath(Path path) {
-        this.db.collection(Tags.USERS).document(this.currentUser.getEmail()).update(Tags.USERS_CURRENT_PATH, path.getLocation())
+        this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
+                .update(Tags.USERS_CURRENT_PATH, path.getLocation())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -181,7 +198,6 @@ public class MainActivity extends AppCompatActivity
                             Log.e("equip path", "onComplete: could not update the current path");
                         } else {
                             currentUserLocalType.setCurrentPath(path.getLocation());
-
                         }
                     }
                 });

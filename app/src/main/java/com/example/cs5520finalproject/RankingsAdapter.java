@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class RankingsAdapter extends RecyclerView.Adapter<RankingsAdapter.ViewHolder> {
     private ArrayList<User> friends;
-    private IRankings mListener;
+    private IFragmentToMainActivity mListener;
 
     public RankingsAdapter() {
 
@@ -21,11 +21,25 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingsAdapter.ViewHo
 
     public RankingsAdapter(ArrayList<User> friends, Context context) {
         this.friends = friends;
-        if(context instanceof IRankings){
-            this.mListener = (IRankings) context;
+        if(context instanceof IFragmentToMainActivity){
+            this.mListener = (IFragmentToMainActivity) context;
         } else{
-            throw new RuntimeException(context.toString()+ "must implement IRankings");
+            throw new RuntimeException(context.toString()+ "must implement IFragmentToMainActivity");
         }
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private final TextView displayName_ranking, rankingPosition_ranking, textView_exp_ranking;
+        private final View profilePic_ranking;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.displayName_ranking = itemView.findViewById(R.id.displayName_ranking);
+            this.rankingPosition_ranking = itemView.findViewById(R.id.rankingPosition_ranking);
+            this.textView_exp_ranking = itemView.findViewById(R.id.textView_exp_ranking);
+            this.profilePic_ranking = itemView.findViewById(R.id.profilePic_ranking);
+        }
+
     }
 
     @NonNull
@@ -44,7 +58,10 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingsAdapter.ViewHo
         String name = friend.getDisplayName();
         int ranking = position + 1;
         int exp = friend.getExp();
-        long startDate = friend.getStartDate();
+
+        holder.displayName_ranking.setText(name);
+        holder.textView_exp_ranking.setText(new StringBuilder(exp));
+        holder.rankingPosition_ranking.setText(new StringBuilder(ranking));
     }
 
     @Override
@@ -52,21 +69,4 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingsAdapter.ViewHo
         return this.friends.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView displayName_ranking, rankingPosition_ranking, exp_ranking;
-        private final View profilePic_ranking;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            this.displayName_ranking = itemView.findViewById(R.id.displayName_ranking);
-            this.rankingPosition_ranking = itemView.findViewById(R.id.rankingPosition_ranking);
-            this.exp_ranking = itemView.findViewById(R.id.exp_ranking);
-            this.profilePic_ranking = itemView.findViewById(R.id.profilePic_ranking);
-        }
-
-    }
-
-    public interface IRankings {
-
-    }
 }

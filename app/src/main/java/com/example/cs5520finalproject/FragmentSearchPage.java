@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -27,15 +27,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class FragmentSearchPage extends Fragment {
-    private Spinner search_page_spinner_path, search_page_spinner_all;
-
-    private SearchView search_page_search_bar;
-
     private RecyclerView search_page_recycler_view;
 
     private ImageButton search_page_prev_button, search_page_next_button;
 
-    private TextView search_page_curr_page_text;
+    private TextView search_page_current_path;
+
+    private Button leave_path_button;
+
 
     private ArrayList<Path> mPaths; // all incomplete paths for currentLocalUser
 
@@ -72,13 +71,26 @@ public class FragmentSearchPage extends Fragment {
         // get paths left for the current User
         this.mPaths = fetchCurrentPathsLeft(currentLocalUser);
 
+        String currentPath = currentLocalUser.getCurrentPath();
+
         View view = inflater.inflate(R.layout.fragment_search_page, container, false);
-        search_page_spinner_path = view.findViewById(R.id.search_page_spinner_path);
-        search_page_spinner_all = view.findViewById(R.id.search_page_spinner_all);
-        search_page_search_bar = view.findViewById(R.id.search_page_search_bar);
         search_page_prev_button = view.findViewById(R.id.search_page_prev_button);
         search_page_next_button = view.findViewById(R.id.search_page_next_button);
-        search_page_curr_page_text = view.findViewById(R.id.search_page_curr_page_text);
+        search_page_current_path = view.findViewById(R.id.search_page_current_path);
+        search_page_current_path.setText("Current Path: " + currentPath);
+        leave_path_button = view.findViewById(R.id.leave_path_button);
+
+        leave_path_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!currentPath.equals("")) { // leave current path
+                    mListener.leaveCurrentPath();
+                } else { // no current path
+                    Toast.makeText(getContext(),"Click on a Path to Start Exploring!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         // set up recycler view
         search_page_recycler_view = view.findViewById(R.id.search_page_recycler_view);
