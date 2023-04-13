@@ -15,7 +15,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout3"
             android:layout_width="333dp"
-            android:layout_height="600dp"
+            android:layout_height="520dp"
             android:background="@color/quest_light_pink"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +40,7 @@
             <ImageView
                 android:id="@+id/imageViewEquipPath"
                 android:layout_width="300dp"
-                android:layout_height="300dp"
+                android:layout_height="250dp"
                 android:layout_marginTop="60dp"
                 android:src="@drawable/no_image_found"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -50,12 +50,14 @@
 
             <TextView
                 android:id="@+id/textViewEquipPathDescription"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/bergen_sans_regular"
                 android:text="Path Description"
                 android:textColor="@color/quest_blue"
+                app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toTopOf="@+id/buttonEquipPath"
+                app:layout_constraintEnd_toEndOf="@+id/imageViewEquipPath"
                 app:layout_constraintStart_toStartOf="@+id/imageViewEquipPath"
                 app:layout_constraintTop_toBottomOf="@+id/imageViewEquipPath"
                 app:layout_constraintVertical_bias="0.209" />
@@ -67,9 +69,10 @@
                 android:fontFamily="@font/bergen_sans_bold"
                 android:text="Path Name - Subject"
                 android:textColor="@color/quest_blue"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/imageViewEquipPath"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="18dp" />
+                app:layout_constraintStart_toStartOf="@+id/imageViewEquipPath"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
@@ -83,7 +86,8 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
             app:layout_constraintStart_toStartOf="@+id/constraintLayout3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.742" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

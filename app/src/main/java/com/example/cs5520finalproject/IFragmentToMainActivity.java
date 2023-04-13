@@ -10,4 +10,5 @@ public interface IFragmentToMainActivity {
     void logout();
     void goToPathHighlights(Path path);
     void equipPath(Path selectedPath);
+    void leaveCurrentPath();
 }

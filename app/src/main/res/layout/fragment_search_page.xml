@@ -20,55 +20,39 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
-            android:layout_width="393dp"
-            android:layout_height="146dp"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="28dp"
             android:background="@color/quest_gold"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/constraintLayout2">
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/search_page_current_path"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
                 android:fontFamily="@font/bergen_sans_bold"
-                android:text="Browse Paths"
+                android:text="Current Path: "
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <SearchView
-                android:id="@+id/search_page_search_bar"
-                android:layout_width="250dp"
-                android:layout_height="25dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="16dp"
-                android:layoutDirection="rtl"
-                android:searchHintIcon="@drawable/search_icon"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_page_spinner_all" />
-
-            <Spinner
-                android:id="@+id/search_page_spinner_all"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="25dp"
+            <Button
+                android:id="@+id/leave_path_button"
+                android:layout_width="91dp"
+                android:layout_height="71dp"
+                android:layout_marginEnd="20dp"
+                android:text="Leave Current Path"
+                android:textSize="10sp"
+                app:layout_constraintBottom_toBottomOf="@+id/search_page_current_path"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-            <Spinner
-                android:id="@+id/search_page_spinner_path"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                app:layout_constraintTop_toTopOf="@+id/search_page_current_path"
+                app:layout_constraintVertical_bias="0.512" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -88,7 +72,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_page_recycler_view"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="428dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="60dp"
