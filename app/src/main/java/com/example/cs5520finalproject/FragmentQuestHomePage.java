@@ -59,10 +59,17 @@ public class FragmentQuestHomePage extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_quest_home_page, container, false);
 
+        Log.d("quest home page", "onCreateView: before assigning the recycler view...");
         this.equipPathMessage = view.findViewById(R.id.pleaseEquipPath_TextView_HomePage);
+
         this.questRecyclerView = view.findViewById(R.id.recyclerView_Quests);
         this.questLayoutManager = new LinearLayoutManager(this.getContext());
         this.questAdapter = new QuestAdapter(this.questsLeftToDo, this.getContext()); // give the adapter only the quests that are left
+        Log.d("quest home page", "onCreateView: after assigning the recycler view...");
+        Log.d("quest home page", "onCreateView: before setting the adapter");
+        this.questRecyclerView.setLayoutManager(this.questLayoutManager);
+        this.questRecyclerView.setAdapter(this.questAdapter);
+        Log.d("quest home page", "onCreateView: after setting the adapter");
         this.extractQuestsLeft();
 
         return view;
@@ -81,6 +88,7 @@ public class FragmentQuestHomePage extends Fragment {
                                 questsLeftToDo.clear();
                                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                                     Quest currQuest = documentSnapshot.toObject(Quest.class);
+                                    Log.d("quest home page", "onComplete: current quest = " + currQuest);
                                     if (!currUserLocalType.getCompletedQuests().contains(currQuest.getName())) {
                                         questsLeftToDo.add(currQuest);
                                     }
