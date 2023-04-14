@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void equipPath(Path path) {
         // can only start path if they have no current path
-        if (currentUserLocalType.getCurrentPath() == null) {
+        if (currentUserLocalType.getCurrentPath().equals("")) {
             this.updateCurrentPath(path);
             this.updateQuestsCompleted();
             this.populateScreen();
@@ -126,7 +126,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void leaveCurrentPath() {
         Path newPath = new Path();
+        Toast.makeText(this,"Current Path removed!",Toast.LENGTH_SHORT).show();
+        newPath.setLocation("");
         this.updateCurrentPath(newPath);
+        this.replaceFragment(new FragmentSearchPage(currentUserLocalType));
+        this.populateScreen();
     }
 
     private void populateScreen() {

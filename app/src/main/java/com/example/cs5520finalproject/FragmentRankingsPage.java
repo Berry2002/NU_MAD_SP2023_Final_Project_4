@@ -1,7 +1,5 @@
 package com.example.cs5520finalproject;
 
-//import static com.example.cs5520finalproject.Tags.USERS;
-
 import android.content.Context;
 import android.os.Bundle;
 
@@ -56,16 +54,17 @@ public class FragmentRankingsPage extends Fragment {
         // set up recycler view
         recyclerViewRankings = view.findViewById(R.id.recyclerViewRankings);
         recyclerViewLayoutManager = new LinearLayoutManager(getContext());
+        rankingsAdapter = new RankingsAdapter(mFriends, getContext());
         recyclerViewRankings.setLayoutManager(recyclerViewLayoutManager);
+        recyclerViewRankings.setAdapter(rankingsAdapter);
 
         // fetch all users in Firebase
         fetchAllUsersInFirebase();
-
         return view;
     }
 
     private void fetchAllUsersInFirebase() {
-        ArrayList<User> users = new ArrayList<>();
+        mFriends.clear();
         db.collection(Tags.USERS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -74,37 +73,13 @@ public class FragmentRankingsPage extends Fragment {
                         if (task.isSuccessful()) {
                             for (DocumentSnapshot documentSnapshot: task.getResult()) {
                                 User user = documentSnapshot.toObject(User.class);
-                                users.add(user);
+                                mFriends.add(user);
                             }
                         }
-                        callAdapter(users); // call adapter (Firebase is async)
+                        rankingsAdapter.setFriends(mFriends);
+                        rankingsAdapter.notifyDataSetChanged();
                     }
                 });
-    }
-
-    private void callAdapter(ArrayList<User> users) {
-        Log.d("callAdapyer", users.toString());
-        sortFriendsBasedOnExp(users); // sort users based on exp
-        rankingsAdapter = new RankingsAdapter(users, getContext());
-        recyclerViewRankings.setAdapter(rankingsAdapter);
-        updateRecyclerView(users);
-    }
-
-    private void updateRecyclerView(ArrayList<User> friends) {
-        this.mFriends = friends;
-        rankingsAdapter.notifyDataSetChanged();
-    }
-
-    // sort friends based on EXP points before passing them to adapter
-    private void sortFriendsBasedOnExp(ArrayList<User> users) {
-        Log.d("users in sort: ", users.toString());
-        Collections.sort(users, new Comparator<User>() {
-            @Override
-            public int compare(User user1, User user2) {
-                // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
-                return Integer.compare(user2.getExp(), user1.getExp());
-            }
-        });
     }
 
     @Override
