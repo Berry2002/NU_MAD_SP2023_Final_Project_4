@@ -10,8 +10,10 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewRankings"
-        android:layout_width="361dp"
-        android:layout_height="350dp"
+        android:layout_width="359dp"
+        android:layout_height="600dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

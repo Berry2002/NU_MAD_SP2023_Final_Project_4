@@ -39,6 +39,10 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
         }
     }
 
+    public void setPaths(ArrayList<Path> mPaths) {
+        this.mPaths = mPaths;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imageViewPath;
         private TextView textViewPathLocation, textViewSubject, textViewPathDescription;
@@ -57,7 +61,6 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("PathsAdapter", "here");
         View itemRecyclerView = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.path_card,parent, false);

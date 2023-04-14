@@ -8,9 +8,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_margin="@dimen/cardview_default_radius"
+        android:layout_margin="20dp"
         app:cardBackgroundColor="@color/quest_gold"
-        app:contentPadding="16dp"
+        app:contentPadding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,15 +57,20 @@
 
             <TextView
                 android:id="@+id/textViewPathDescription"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginEnd="8dp"
+                android:ellipsize="marquee"
                 android:fontFamily="@font/bergen_sans_regular"
+                android:maxLines="10"
                 android:text="Description"
                 android:textColor="@color/quest_blue"
                 android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textViewSubject"
-                app:layout_constraintTop_toBottomOf="@+id/textViewSubject" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewSubject"
+                app:layout_editor_absoluteX="10dp" />
 
             <Button
                 android:id="@+id/buttonSeePathHighlights"

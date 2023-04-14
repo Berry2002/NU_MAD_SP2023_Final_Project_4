@@ -24,7 +24,7 @@
             android:layout_height="100dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginBottom="15dp"
             android:background="@color/quest_gold"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintEnd_toEndOf="@+id/constraintLayout2"
@@ -59,9 +59,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout2"
             android:layout_width="0dp"
-            android:layout_height="500dp"
+            android:layout_height="480dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="170dp"
+            android:layout_marginTop="130dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -72,10 +72,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_page_recycler_view"
                 android:layout_width="0dp"
-                android:layout_height="428dp"
+                android:layout_height="0dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="60dp"
                 android:background="@color/quest_light_pink"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -83,40 +82,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
-
-            <ImageButton
-                android:id="@+id/search_page_prev_button"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginEnd="10dp"
-                android:backgroundTint="@color/quest_blue"
-                android:src="@android:drawable/ic_media_previous"
-                app:layout_constraintBottom_toBottomOf="@+id/search_page_curr_page_text"
-                app:layout_constraintEnd_toStartOf="@+id/search_page_curr_page_text"
-                app:layout_constraintTop_toTopOf="@+id/search_page_curr_page_text"
-                app:layout_constraintVertical_bias="0.588" />
-
-            <ImageButton
-                android:id="@+id/search_page_next_button"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="10dp"
-                android:backgroundTint="@color/quest_blue"
-                android:src="@android:drawable/ic_media_next"
-                app:layout_constraintBottom_toBottomOf="@+id/search_page_curr_page_text"
-                app:layout_constraintStart_toEndOf="@+id/search_page_curr_page_text"
-                app:layout_constraintTop_toTopOf="@+id/search_page_curr_page_text"
-                app:layout_constraintVertical_bias="0.529" />
-
-            <TextView
-                android:id="@+id/search_page_curr_page_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Page 1 of 20"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_page_recycler_view" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
