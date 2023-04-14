@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,6 @@ import java.util.ArrayList;
 
 public class FragmentSearchPage extends Fragment {
     private RecyclerView search_page_recycler_view;
-
-    private ImageButton search_page_prev_button, search_page_next_button;
 
     private TextView search_page_current_path;
 
@@ -68,14 +67,9 @@ public class FragmentSearchPage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // get paths left for the current User
-        this.mPaths = fetchCurrentPathsLeft(currentLocalUser);
-
         String currentPath = currentLocalUser.getCurrentPath();
 
         View view = inflater.inflate(R.layout.fragment_search_page, container, false);
-        search_page_prev_button = view.findViewById(R.id.search_page_prev_button);
-        search_page_next_button = view.findViewById(R.id.search_page_next_button);
         search_page_current_path = view.findViewById(R.id.search_page_current_path);
         search_page_current_path.setText("Current Path: " + currentPath);
         leave_path_button = view.findViewById(R.id.leave_path_button);
@@ -99,15 +93,17 @@ public class FragmentSearchPage extends Fragment {
         search_page_recycler_view.setLayoutManager(recyclerViewLayoutManager);
         search_page_recycler_view.setAdapter(pathsAdapter);
 
+        // get paths left for the current User
+        fetchCurrentPathsLeft(currentLocalUser);
+
         return view;
     }
 
 
     // get paths left for the current user
-    private ArrayList<Path> fetchCurrentPathsLeft(User user) {
-        ArrayList<String> completedPaths = user.getCompletedPaths();
-        ArrayList<Path> allPaths = new ArrayList<>();
-
+    private void fetchCurrentPathsLeft(User user) {
+        mPaths.clear();
+        ArrayList<String> completedPaths = user.getCompletedPaths(); // user's completed paths
         // get all paths in Firebase
         db.collection(Tags.PATHS)
                 .get()
@@ -117,15 +113,18 @@ public class FragmentSearchPage extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot: task.getResult()) {
                                 Path path = documentSnapshot.toObject(Path.class);
-                                if (!completedPaths.contains(path.getLocation())) {
-                                    allPaths.add(path);
+                                // if user has neither completed the path nor on current path
+                                if (!completedPaths.contains(path.getLocation())
+                                        && (user.getCurrentPath().equals("")
+                                        || !user.getCurrentPath().equals(path.getLocation()))) {
+                                    mPaths.add(path);
                                 }
                             }
+                            pathsAdapter.setPaths(mPaths);
                             pathsAdapter.notifyDataSetChanged();
                         }
                     }
                 });
-        return allPaths;
     }
 
     @Override
