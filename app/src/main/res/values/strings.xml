@@ -13,4 +13,5 @@
     <string name="password_hint">Enter your password</string>
     <string name="displayName_message">Enter your display name</string>
     <string name="confirmPassword_hint">Confrim your password</string>
+    <string name="please_equip_path">Please equip a path in the search page! You currently have no path equipped.</string>
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/travelLog_imageView"
         android:layout_width="168dp"
         android:layout_height="179dp"
         app:layout_constraintBottom_toBottomOf="parent"
