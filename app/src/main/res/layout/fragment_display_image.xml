@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FragmentDisplayImage">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageViewPhoto"
+            android:layout_width="364dp"
+            android:layout_height="261dp"
+            android:layout_marginTop="64dp"
+            android:src="@drawable/no_image_found"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.51"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonRetake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="76dp"
+            android:text="Retake"
+            app:layout_constraintStart_toStartOf="@+id/imageViewPhoto"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewPhoto" />
+
+        <Button
+            android:id="@+id/buttonUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="76dp"
+            android:text="Upload"
+            app:layout_constraintEnd_toEndOf="@+id/imageViewPhoto"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewPhoto" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

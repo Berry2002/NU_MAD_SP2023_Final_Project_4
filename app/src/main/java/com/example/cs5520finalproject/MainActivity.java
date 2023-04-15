@@ -2,19 +2,30 @@ package com.example.cs5520finalproject;
 
 import static java.security.AccessController.getContext;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -24,17 +35,22 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
-        implements IFragmentToMainActivity {
-
+        implements IFragmentToMainActivity,
+        FragmentCameraController.DisplayTakenPhoto,
+        FragmentDisplayImage.RetakePhoto {
+    private static final int PERMISSIONS_CODE = 0x100;
     ActivityMainBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
     private User currentUserLocalType;
+
 
     public MainActivity() {
         this.mAuth = FirebaseAuth.getInstance();
@@ -133,6 +149,11 @@ public class MainActivity extends AppCompatActivity
         this.populateScreen();
     }
 
+    @Override
+    public void changeProfilePicture() {
+        checkForCameraPermission();
+    }
+
     private void populateScreen() {
         BottomNavigationView navBar = findViewById(R.id.bottomNavView);
         if (this.currentUser == null) { // if no user is logged in, we prompt login/register
@@ -220,5 +241,81 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                 });
+    }
+
+    private void checkForCameraPermission() {
+        // Asking for permissions in runtime......
+        Boolean cameraAllowed = ContextCompat
+                .checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+        Boolean readAllowed = ContextCompat
+                .checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        Boolean writeAllowed = ContextCompat
+                .checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+
+        if (cameraAllowed && readAllowed && writeAllowed){
+            replaceFragment(FragmentCameraController.newInstance());
+        } else {
+            requestPermissions(new String[]{
+                    android.Manifest.permission.CAMERA,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            }, PERMISSIONS_CODE);
+        }
+    }
+
+    @Override
+    public void onTakePhoto(Uri imageUri) {
+        replaceFragment(FragmentDisplayImage.newInstance(imageUri));
+    }
+
+    @Override
+    public void onOpenGalleryPressed() {
+        openGallery();
+    }
+
+    //Retrieving an image from gallery....
+    ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode()==RESULT_OK){
+                        Intent data = result.getData();
+                        Uri selectedImageUri = data.getData();
+                        replaceFragment(FragmentDisplayImage.newInstance(selectedImageUri));
+                    }
+                }
+            }
+    );
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        galleryLauncher.launch(intent);
+    }
+    @Override
+    public void onRetakePressed() {
+        replaceFragment(new FragmentCameraController());
+    }
+
+    @Override
+    public void onUploadButtonPressed(Uri imageUri, ProgressBar progressBar) {
+        // Upload an image from local file....
+//        StorageReference storageReference = storage.getReference().child("images/"+imageUri.getLastPathSegment());
+//        UploadTask uploadImage = storageReference.putFile(imageUri);
+//        uploadImage.addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(MainActivity.this, "Upload Failed! Try again!", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                        Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
     }
 }

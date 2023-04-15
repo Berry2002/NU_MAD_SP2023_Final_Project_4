@@ -110,6 +110,7 @@ public class FragmentProfilePage extends Fragment {
             @Override
             public void onClick(View view) {
                 // prompt the user to open their device and select a photo to upload
+                pathway.changeProfilePicture();
             }
         });
 
