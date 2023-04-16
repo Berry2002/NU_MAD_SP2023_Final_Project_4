@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,7 @@ public class FragmentDisplayImage extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             imageUri = getArguments().getParcelable(ARG_URI);
+            Log.d("display image", "onCreate");
         }
     }
 
