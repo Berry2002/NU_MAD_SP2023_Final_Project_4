@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,14 +42,9 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
     private Preview preview;
     private ImageCapture imageCapture;
     private ProcessCameraProvider cameraProvider = null;
-    private int lenseFacing;
-    private int lenseFacingBack;
-    private int lenseFacingFront;
-
     private DisplayTakenPhoto mListener;
 
     private FloatingActionButton buttonTakePhoto;
-    private FloatingActionButton buttonSwitchCamera;
     private FloatingActionButton buttonOpenGallery;
 
 
@@ -66,8 +62,6 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        lenseFacingBack = CameraSelector.LENS_FACING_BACK;
-        lenseFacingFront = CameraSelector.LENS_FACING_FRONT;
     }
 
     @Override
@@ -76,31 +70,22 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_camera_controller, container, false);
         previewView = rootView.findViewById(R.id.previewView);
-
         buttonTakePhoto = rootView.findViewById(R.id.buttonTakePhoto);
-//        buttonSwitchCamera = rootView.findViewById(R.id.buttonSwitchCamera);
         buttonOpenGallery = rootView.findViewById(R.id.buttonOpenGallery);
 
         buttonTakePhoto.setOnClickListener(this);
-//        buttonSwitchCamera.setOnClickListener(this);
         buttonOpenGallery.setOnClickListener(this);
 
-//        default lense facing....
-        lenseFacing = lenseFacingBack;
-
-        setUpCamera(lenseFacing);
+        setUpCamera();
 
         return rootView;
     }
 
-
-
-    private void setUpCamera(int lenseFacing) {
-        //            binding hardware camera with preview, and imageCapture.......
+    private void setUpCamera() {
+        // binding hardware camera with preview, and imageCapture.......
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
-        cameraProviderFuture.addListener(()->{
-            preview = new Preview.Builder()
-                    .build();
+        cameraProviderFuture.addListener(() -> {
+            preview = new Preview.Builder().build();
             preview.setSurfaceProvider(previewView.getSurfaceProvider());
             imageCapture = new ImageCapture.Builder()
                     .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
@@ -108,18 +93,22 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
             try {
                 cameraProvider = cameraProviderFuture.get();
                 cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(lenseFacing)
+                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                         .build();
                 cameraProvider.unbindAll();
                 cameraProvider.bindToLifecycle((LifecycleOwner) getContext(),cameraSelector, preview, imageCapture);
+
+                Log.d("camera controller", "set up camera");
+
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
-        },ContextCompat.getMainExecutor(getContext()));
-
+        }, ContextCompat.getMainExecutor(getContext()));
     }
+
     //  TakePhoto implementation....
     private void takePhoto() {
+        Log.d("take photo", "here");
         long timestamp = System.currentTimeMillis();
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timestamp);
@@ -133,8 +122,7 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
                 getContext().getContentResolver(),
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues
-        )
-                .build();
+        ).build();
 
 
         imageCapture.takePicture(outputFileOptions,
@@ -142,7 +130,7 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
                 new ImageCapture.OnImageSavedCallback() {
                     @Override
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-//                        Log.d("demo", "onImageSaved: "+ outputFileResults.getSavedUri());
+                        Log.d("demo", "onImageSaved: "+ outputFileResults.getSavedUri());
                         mListener.onTakePhoto(outputFileResults.getSavedUri());
                     }
 
@@ -162,15 +150,6 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
             case R.id.buttonOpenGallery:
                 mListener.onOpenGalleryPressed();
                 break;
-//            case R.id.buttonSwitchCamera:
-//                if(lenseFacing==lenseFacingBack){
-//                    lenseFacing = lenseFacingFront;
-//                    setUpCamera(lenseFacing);
-//                }else{
-//                    lenseFacing = lenseFacingBack;
-//                    setUpCamera(lenseFacing);
-//                }
-//                break;
         }
     }
 
@@ -188,6 +167,4 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
         void onTakePhoto(Uri imageUri);
         void onOpenGalleryPressed();
     }
-
-
 }

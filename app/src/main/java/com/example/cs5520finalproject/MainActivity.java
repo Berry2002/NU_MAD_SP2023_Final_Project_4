@@ -246,11 +246,14 @@ public class MainActivity extends AppCompatActivity
     private void checkForCameraPermission() {
         // Asking for permissions in runtime......
         Boolean cameraAllowed = ContextCompat
-                .checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
+                .checkSelfPermission(this,
+                        android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
         Boolean readAllowed = ContextCompat
-                .checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+                .checkSelfPermission(this,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         Boolean writeAllowed = ContextCompat
-                .checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+                .checkSelfPermission(this,
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
         if (cameraAllowed && readAllowed && writeAllowed){
             replaceFragment(FragmentCameraController.newInstance());
@@ -264,7 +267,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults.length > 2){
+            replaceFragment(FragmentCameraController.newInstance());
+        } else{
+            Toast.makeText(this, "You must allow Camera and Storage permissions!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
     public void onTakePhoto(Uri imageUri) {
+        Log.d("onTakePhoto", "here");
         replaceFragment(FragmentDisplayImage.newInstance(imageUri));
     }
 
