@@ -51,6 +51,7 @@ public class FragmentSearchPage extends Fragment {
 
     public FragmentSearchPage(User user) {
         this.currentLocalUser = user;
+        Log.d("search page constructor, user: ", user.getDisplayName());
         this.db = FirebaseFirestore.getInstance();
         this.mPaths = new ArrayList<>();
     }
@@ -98,6 +99,8 @@ public class FragmentSearchPage extends Fragment {
         search_page_recycler_view.setAdapter(pathsAdapter);
 
         Log.d("search page", "onCreateView: currentLocalUser == null " + (currentLocalUser == null));
+        Log.d("search page, user: ", currentLocalUser.getDisplayName());
+
         // get paths left for the current User
         fetchCurrentPathsLeft(currentLocalUser);
 
@@ -120,10 +123,13 @@ public class FragmentSearchPage extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot: task.getResult()) {
                                 Path path = documentSnapshot.toObject(Path.class);
+
                                 // if user has neither completed the path nor on current path
-                                if ((user.getCurrentPathID() == null
-                                        || !user.getCurrentPathID().equals(path.getPathID()))
-                                && !completedPaths.contains(path.getPathID())) {
+
+                                if (!completedPaths.contains(path.getPathID())
+                                        && (user.getCurrentPathID() == null
+                                        || !user.getCurrentPathID().equals(path.getPathID()))) {
+
                                     mPaths.add(path);
                                 }
                             }

@@ -3,9 +3,14 @@
     <item android:title="Home"
         android:icon="@drawable/quest_list_icon"
         android:id="@+id/fragmentQuestHomePage"/>
-    <item android:title="Search"
+    <item
+        android:id="@+id/fragmentReviewsHomePage"
+        android:icon="@drawable/reviews_icon"
+        android:title="@string/reviews" />
+    <item
+        android:id="@+id/fragmentSearchPage"
         android:icon="@drawable/search_icon"
-        android:id="@+id/fragmentSearchPage"/>
+        android:title="Search" />
     <item android:title="Rankings"
         android:icon="@drawable/rankings_icon"
         android:id="@+id/fragmentRankingsPage"/>

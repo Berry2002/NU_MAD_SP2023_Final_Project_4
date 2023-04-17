@@ -1,19 +1,22 @@
 package com.example.cs5520finalproject;
 
 import java.sql.Time;
+import java.util.Date;
 
 public class Review {
-    private String reviewer, comment;
-    private Time time;
+    private String reviewer, title, comment;
+    private long time;
 
     public Review() {
 
     }
 
-    public Review(String reviewer, String comment, Time time) {
+    public Review(String reviewer, String title, String comment) {
         this.reviewer = reviewer;
+        this.title = title;
         this.comment = comment;
-        this.time = time;
+        Date date = new Date();
+        this.time = date.getTime();
     }
 
     public String getReviewer() {
@@ -32,11 +35,19 @@ public class Review {
         this.comment = comment;
     }
 
-    public Time getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(long time) {
         this.time = time;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
