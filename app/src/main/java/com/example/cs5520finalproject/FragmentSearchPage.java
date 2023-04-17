@@ -99,7 +99,7 @@ public class FragmentSearchPage extends Fragment {
         search_page_recycler_view.setAdapter(pathsAdapter);
 
         Log.d("search page", "onCreateView: currentLocalUser == null " + (currentLocalUser == null));
-        Log.d("search page, user: ", currentLocalUser.getDisplayName());
+        Log.d("search page, user", currentLocalUser.getDisplayName());
 
         // get paths left for the current User
         fetchCurrentPathsLeft(currentLocalUser);

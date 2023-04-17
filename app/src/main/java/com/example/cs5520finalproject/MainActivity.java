@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity
             navBar.setVisibility(View.GONE);
         } else { // go to the current user's home page
             navBar.setVisibility(View.VISIBLE);
+            binding.bottomNavView.setSelectedItemId(R.id.fragmentQuestHomePage);
             this.switchToHomePageFragment();
         }
     }
