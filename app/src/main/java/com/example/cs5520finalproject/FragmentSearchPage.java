@@ -67,17 +67,21 @@ public class FragmentSearchPage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String currentPath = currentLocalUser.getCurrentPathName();
-
         View view = inflater.inflate(R.layout.fragment_search_page, container, false);
         search_page_current_path = view.findViewById(R.id.search_page_current_path);
-        search_page_current_path.setText("Current Path: " + currentPath);
+
+        String currentPath = currentLocalUser.getCurrentPathName();
+        if (currentPath == null) {
+            search_page_current_path.setText("No path equipped currently.");
+        } else {
+            search_page_current_path.setText("Current Path: " + currentPath);
+        }
         leave_path_button = view.findViewById(R.id.leave_path_button);
 
         leave_path_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!currentPath.equals("")) { // leave current path
+                if (currentPath != null) { // leave current path
                     mListener.leaveCurrentPath();
                 } else { // no current path
                     Toast.makeText(getContext(),"Click on a Path to Start Exploring!",
@@ -93,6 +97,7 @@ public class FragmentSearchPage extends Fragment {
         search_page_recycler_view.setLayoutManager(recyclerViewLayoutManager);
         search_page_recycler_view.setAdapter(pathsAdapter);
 
+        Log.d("search page", "onCreateView: currentLocalUser == null " + (currentLocalUser == null));
         // get paths left for the current User
         fetchCurrentPathsLeft(currentLocalUser);
 
@@ -102,8 +107,10 @@ public class FragmentSearchPage extends Fragment {
 
     // get paths left for the current user
     private void fetchCurrentPathsLeft(User user) {
+        Log.d("search page", "fetchCurrentPathsLeft: user == null " + (user == null));
         mPaths.clear();
         ArrayList<String> completedPaths = user.getCompletedPaths(); // user's completed paths
+        Log.d("search page", "fetchCurrentPathsLeft: user's completed paths == null " + (user.getCompletedPaths() == null));
         // get all paths in Firebase
         db.collection(Tags.PATHS)
                 .get()
@@ -114,9 +121,9 @@ public class FragmentSearchPage extends Fragment {
                             for (QueryDocumentSnapshot documentSnapshot: task.getResult()) {
                                 Path path = documentSnapshot.toObject(Path.class);
                                 // if user has neither completed the path nor on current path
-                                if (!completedPaths.contains(path.getLocation())
-                                        && (user.getCurrentPathID().equals("")
-                                        || !user.getCurrentPathID().equals(path.getLocation()))) {
+                                if ((user.getCurrentPathID() == null
+                                        || !user.getCurrentPathID().equals(path.getPathID()))
+                                && !completedPaths.contains(path.getPathID())) {
                                     mPaths.add(path);
                                 }
                             }
