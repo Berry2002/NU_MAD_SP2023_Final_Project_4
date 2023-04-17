@@ -43,6 +43,7 @@ public class FragmentQuestHomePage extends Fragment {
 
     public FragmentQuestHomePage(User currUser) {
         this.currUserLocalType = currUser;
+        Log.d("quest home page current user: ", currUserLocalType.getDisplayName());
         this.db = FirebaseFirestore.getInstance();
         this.questsLeftToDo = new ArrayList<Quest>();
         // extract the list of quests we need to display by going through the database

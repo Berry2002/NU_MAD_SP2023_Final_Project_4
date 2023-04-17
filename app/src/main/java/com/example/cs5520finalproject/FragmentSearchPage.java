@@ -51,6 +51,7 @@ public class FragmentSearchPage extends Fragment {
 
     public FragmentSearchPage(User user) {
         this.currentLocalUser = user;
+        Log.d("search page constructor, user: ", user.getDisplayName());
         this.db = FirebaseFirestore.getInstance();
         this.mPaths = new ArrayList<>();
     }
@@ -77,7 +78,7 @@ public class FragmentSearchPage extends Fragment {
         leave_path_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!currentPath.equals("")) { // leave current path
+                if (currentPath != null) { // leave current path
                     mListener.leaveCurrentPath();
                 } else { // no current path
                     Toast.makeText(getContext(),"Click on a Path to Start Exploring!",
@@ -92,6 +93,8 @@ public class FragmentSearchPage extends Fragment {
         pathsAdapter = new PathsAdapter(mPaths, getContext());
         search_page_recycler_view.setLayoutManager(recyclerViewLayoutManager);
         search_page_recycler_view.setAdapter(pathsAdapter);
+
+        Log.d("search page, user: ", currentLocalUser.getDisplayName());
 
         // get paths left for the current User
         fetchCurrentPathsLeft(currentLocalUser);
@@ -113,10 +116,11 @@ public class FragmentSearchPage extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot documentSnapshot: task.getResult()) {
                                 Path path = documentSnapshot.toObject(Path.class);
+
                                 // if user has neither completed the path nor on current path
-                                if (!completedPaths.contains(path.getLocation())
-                                        && (user.getCurrentPathID().equals("")
-                                        || !user.getCurrentPathID().equals(path.getLocation()))) {
+                                if (!completedPaths.contains(path.getPathID())
+                                        && (user.getCurrentPathID() == null
+                                        || !user.getCurrentPathID().equals(path.getPathID()))) {
                                     mPaths.add(path);
                                 }
                             }
