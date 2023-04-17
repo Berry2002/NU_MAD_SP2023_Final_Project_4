@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity
         // can only start path if they have no current path
         if (currentUserLocalType.getCurrentPathID() == null) {
         
-            this.updateCurrentPath(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
-            this.updateCurrentPath(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
+            this.updateInfo(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
+            this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
             currentUserLocalType.setCurrentPathID(path.getPathID());
             currentUserLocalType.setCurrentPathName(path.getPathName());
             
@@ -153,8 +153,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void leaveCurrentPath() {
         Toast.makeText(this,"Current Path removed!",Toast.LENGTH_SHORT).show();
-        this.updateCurrentPath(Tags.USERS_CURRENT_PATH_ID, null);
-        this.updateCurrentPath(Tags.USERS_CURRENT_PATH_NAME, null);
+        this.updateInfo(Tags.USERS_CURRENT_PATH_ID, null);
+        this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, null);
         currentUserLocalType.setCurrentPathID(null);
         currentUserLocalType.setCurrentPathName(null);
 
@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void updateCurrentPath(String field, String info) {
+    private void updateInfo(String field, String info) {
         this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
                 .update(field, info)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -334,8 +334,29 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onUploadButtonPressed(Uri imageUri) {
         // Upload an image from local file....
-        StorageReference storageReference = storage.getReference().child("images/"+imageUri.getLastPathSegment());
+        StorageReference storageReference = storage.getReference()
+                .child("images/profile/" + currentUserLocalType.getEmail());
+        storageReference = storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/" + currentUserLocalType.getEmail());
+
         UploadTask uploadImage = storageReference.putFile(imageUri);
+        storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                Uri downloadUrl = task.getResult();
+                currentUserLocalType.setProfilePicture(downloadUrl.getPath());
+                Log.d("on upload button pressed", "onComplete: " + currentUserLocalType.getProfilePicture());
+            }
+        });
+        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String imgPathName = uri.getPath();
+                Log.d("imageUri.getPath(): ", imgPathName);
+                currentUserLocalType.setProfilePicture(imgPathName);
+                updateInfo(Tags.USERS_PROFILE_PICTURE, imgPathName);
+                switchToProfilePageFragment();
+            }
+        });
         uploadImage.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -346,7 +367,9 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
+
                     }
                 });
+
     }
 }
