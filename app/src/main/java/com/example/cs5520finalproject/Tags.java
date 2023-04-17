@@ -8,7 +8,8 @@ public class Tags {
     public static final String USERS_PASSWORD = "password";
     public static final String USERS_COMPLETED_PATHS = "completedPaths";
     public static final String USERS_COMPLETED_QUESTS = "completedQuests";
-    public static final String USERS_CURRENT_PATH = "currentPath";
+    public static final String USERS_CURRENT_PATH_ID = "currentPathID";
+    public static final String USERS_CURRENT_PATH_NAME = "currentPathName";
     public static final String USERS_EXP = "exp";
     public static final String USERS_PROFILE_PICTURE = "profilePicture";
     public static final String USERS_TRAVEL_LOG = "travelLog";

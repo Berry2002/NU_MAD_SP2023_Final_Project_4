@@ -98,7 +98,7 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
         holder.getDescription().setText(currentQuest.getDescription());
         holder.getName().setText(currentQuest.getName());
-        holder.getSummary().setText(currentQuest.getDescription());
+        holder.getSummary().setText(currentQuest.getSummary());
         holder.getExpValue().setText(String.format("EXP: %d points", currentQuest.getExpValue()));
 
         Glide.with(this.context)

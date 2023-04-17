@@ -76,11 +76,11 @@ public class FragmentQuestHomePage extends Fragment {
     }
 
     private void extractQuestsLeft() {
-        if (this.currUserLocalType.getCurrentPath() == null) {
+        if (this.currUserLocalType.getCurrentPathID() == null) {
             this.equipPathMessage.setVisibility(View.VISIBLE);
         } else {
             this.equipPathMessage.setVisibility(View.GONE);
-            this.db.collection(Tags.PATHS).document(this.currUserLocalType.getCurrentPath())
+            this.db.collection(Tags.PATHS).document(this.currUserLocalType.getCurrentPathID())
                     .collection(Tags.QUESTS).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {

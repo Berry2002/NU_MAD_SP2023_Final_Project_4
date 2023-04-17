@@ -3,7 +3,7 @@ package com.example.cs5520finalproject;
 import java.util.ArrayList;
 
 public class Path {
-    private String location, subject, description, image, pathID;
+    private String location, subject, description, image, pathID, pathName;
     private ArrayList<Quest> quests;
     private ArrayList<Review> review;
     private int numQuests;
@@ -13,7 +13,7 @@ public class Path {
     }
 
     public Path(String location, String subject, String description, String image, String pathID,
-                ArrayList<Quest> quests, ArrayList<Review> review) {
+                String pathName, ArrayList<Quest> quests, ArrayList<Review> review) {
         this.location = location;
         this.subject = subject;
         this.description = description;
@@ -21,6 +21,7 @@ public class Path {
         this.quests = quests;
         this.review = review;
         this.pathID = pathID;
+        this.pathName = pathName;
         this.numQuests = this.quests.size();
     }
 
@@ -78,5 +79,21 @@ public class Path {
 
     public void setNumQuests(int numQuests) {
         this.numQuests = numQuests;
+    }
+
+    public String getPathID() {
+        return pathID;
+    }
+
+    public void setPathID(String pathID) {
+        this.pathID = pathID;
+    }
+
+    public String getPathName() {
+        return pathName;
+    }
+
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
     }
 }
