@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
 
     public void goToPathReviews(Path path) {
         replaceFragment(new FragmentPathReviewsPage(path));
-
+    } 
     public void changeProfilePicture() {
         checkForCameraPermission();
     }
