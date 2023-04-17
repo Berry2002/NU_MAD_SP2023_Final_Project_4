@@ -99,10 +99,12 @@ public class MainActivity extends AppCompatActivity
     public void equipPath(Path path) {
         // can only start path if they have no current path
         if (currentUserLocalType.getCurrentPathID() == null) {
+        
             this.updateCurrentPath(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
             this.updateCurrentPath(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
             currentUserLocalType.setCurrentPathID(path.getPathID());
             currentUserLocalType.setCurrentPathName(path.getPathName());
+            
             this.updateQuestsCompleted();
             this.populateScreen();
         } else {
