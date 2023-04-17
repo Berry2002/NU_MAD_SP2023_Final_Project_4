@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -334,42 +335,31 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onUploadButtonPressed(Uri imageUri) {
         // Upload an image from local file....
-        StorageReference storageReference = storage.getReference()
-                .child("images/profile/" + currentUserLocalType.getEmail());
-        storageReference = storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/" + currentUserLocalType.getEmail());
-
+        StorageReference storageReference = storage.getReference().child("images/profile/" + currentUserLocalType.getEmail());
         UploadTask uploadImage = storageReference.putFile(imageUri);
-        storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//        https://console.firebase.google.com/project/quest-8f3ba/storage/quest-8f3ba.appspot.com/files/~2Fimages~2Fprofile
+        Task<Uri> urlTask = uploadImage.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                // Continue with the task to get the download URL
+                return storageReference.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                Uri downloadUrl = task.getResult();
-                currentUserLocalType.setProfilePicture(downloadUrl.getPath());
-                Log.d("on upload button pressed", "onComplete: " + currentUserLocalType.getProfilePicture());
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    currentUserLocalType.setProfilePicture(downloadUri.getPath());
+                    updateInfo(Tags.USERS_PROFILE_PICTURE, downloadUri.getPath());
+                    Log.d("on upload button pressed", "onComplete: " + currentUserLocalType.getProfilePicture());
+                    switchToProfilePageFragment();
+                } else {
+                    Log.d("onComplete storage reference", "fail");
+                }
             }
         });
-        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String imgPathName = uri.getPath();
-                Log.d("imageUri.getPath(): ", imgPathName);
-                currentUserLocalType.setProfilePicture(imgPathName);
-                updateInfo(Tags.USERS_PROFILE_PICTURE, imgPathName);
-                switchToProfilePageFragment();
-            }
-        });
-        uploadImage.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "Upload Failed! Try again!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
     }
 }
