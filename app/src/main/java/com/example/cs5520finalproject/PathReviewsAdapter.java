@@ -49,7 +49,7 @@ public class PathReviewsAdapter extends RecyclerView.Adapter<PathReviewsAdapter.
             this.textView_PathReviewsName = itemView.findViewById(R.id.textView_PathReviewsName);
             this.textView_PathReviewsSubject = itemView.findViewById(R.id.textView_PathReviewsSubject);
             this.textView_PathReviewsDescription = itemView.findViewById(R.id.textView_PathReviewsDescription);
-            this.button_SeePathReviews = itemView.findViewById(R.id.buttonSeePathHighlights);
+            this.button_SeePathReviews = itemView.findViewById(R.id.button_SeePathReviews);
         }
     }
 
@@ -66,8 +66,6 @@ public class PathReviewsAdapter extends RecyclerView.Adapter<PathReviewsAdapter.
     @Override
     public void onBindViewHolder(@NonNull PathReviewsAdapter.ViewHolder holder, int position) {
         Path currentPath = this.mPaths.get(position);
-
-        Log.d("current path:", currentPath.getLocation());
 
         holder.textView_PathReviewsName.setText(currentPath.getLocation());
         holder.textView_PathReviewsSubject.setText(currentPath.getSubject());

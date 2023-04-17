@@ -59,6 +59,8 @@ public class FragmentReviewsHomePage extends Fragment {
         pathReviewsAdapter = new PathReviewsAdapter(mPaths, getContext());
         recyclerView_ReviewsHomePage.setLayoutManager(recyclerViewLayoutManager);
         recyclerView_ReviewsHomePage.setAdapter(pathReviewsAdapter);
+
+        fetchAllPaths();
         return view;
     }
 

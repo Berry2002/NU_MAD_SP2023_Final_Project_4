@@ -4,49 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="8dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         app:cardBackgroundColor="@color/design_default_color_background"
+        app:cardCornerRadius="5dp"
         app:cardElevation="2dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="16dp">
 
             <TextView
                 android:id="@+id/textView_PathReviewsName"
-                android:layout_width="260dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/tcb"
                 android:text="TextView"
+                android:textAlignment="viewStart"
                 android:textColor="@color/quest_blue"
                 android:textSize="24sp"
+                app:layout_constraintEnd_toStartOf="@+id/button_SeePathReviews"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/textView_PathReviewsSubject"
-                android:layout_width="260dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/bergen_sans_bold_italic"
                 android:text="TextView"
+                android:textAlignment="viewStart"
                 android:textColor="@color/quest_pink"
                 android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="@+id/textView_PathReviewsName"
                 app:layout_constraintStart_toStartOf="@+id/textView_PathReviewsName"
                 app:layout_constraintTop_toBottomOf="@+id/textView_PathReviewsName" />
 
             <TextView
                 android:id="@+id/textView_PathReviewsDescription"
-                android:layout_width="260dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/tcm"
                 android:text="TextView"
+                android:textAlignment="viewStart"
                 android:textColor="@color/quest_blue"
+                app:layout_constraintEnd_toEndOf="@+id/textView_PathReviewsSubject"
                 app:layout_constraintStart_toStartOf="@+id/textView_PathReviewsSubject"
                 app:layout_constraintTop_toBottomOf="@+id/textView_PathReviewsSubject" />
 
