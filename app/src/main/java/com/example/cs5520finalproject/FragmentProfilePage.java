@@ -184,9 +184,9 @@ public class FragmentProfilePage extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             // reload information
-                            Toast.makeText(getContext(), "Profile information updated on Firebase successfully!",
-                                    Toast.LENGTH_SHORT).show();
                             refreshUserData();
+                        } else {
+                            Log.e("profile page fragment", "onComplete: update profile information on firestore not successful");
                         }
                     }
                 });
@@ -202,11 +202,9 @@ public class FragmentProfilePage extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getContext(), String.format("%s updated on Firestore successfully!", field),
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d("profile page fragment", "onComplete: update profile information on firestore successful");
                         } else {
-                            Log.e("update profile information on firestore",
-                                    String.format("onComplete: could not update %s information on Firestore", field));
+                            Log.e("profile page fragment", "onComplete: update profile information on firestore not successful");
                         }
                     }
                 });
