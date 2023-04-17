@@ -1,7 +1,5 @@
 package com.example.cs5520finalproject;
 
-import static java.security.AccessController.getContext;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,8 +22,6 @@ import android.widget.Toast;
 
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -98,7 +94,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void equipPath(Path path) {
         // can only start path if they have no current path
-        if (currentUserLocalType.getCurrentPath().equals("")) {
+        if (currentUserLocalType.getCurrentPathID().equals("")) {
             this.updateCurrentPath(path);
             this.updateQuestsCompleted();
             this.populateScreen();
@@ -215,14 +211,14 @@ public class MainActivity extends AppCompatActivity
 
     private void updateCurrentPath(Path path) {
         this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
-                .update(Tags.USERS_CURRENT_PATH, path.getLocation())
+                .update(Tags.USERS_CURRENT_PATH_ID, path.getLocation())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
                             Log.e("equip path", "onComplete: could not update the current path");
                         } else {
-                            currentUserLocalType.setCurrentPath(path.getLocation());
+                            currentUserLocalType.setCurrentPathName(path.getLocation());
                         }
                     }
                 });
