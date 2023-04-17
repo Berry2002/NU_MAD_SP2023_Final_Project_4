@@ -133,6 +133,11 @@ public class MainActivity extends AppCompatActivity
         this.populateScreen();
     }
 
+    @Override
+    public void goToPathReviews(Path path) {
+        replaceFragment(new Fragment(path));
+    }
+
     private void populateScreen() {
         BottomNavigationView navBar = findViewById(R.id.bottomNavView);
         if (this.currentUser == null) { // if no user is logged in, we prompt login/register
