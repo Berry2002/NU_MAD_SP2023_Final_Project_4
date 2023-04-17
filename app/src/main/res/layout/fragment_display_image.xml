@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/imageViewPhoto"
-            android:layout_width="364dp"
-            android:layout_height="261dp"
+            android:layout_width="360dp"
+            android:layout_height="380dp"
             android:layout_marginTop="64dp"
             android:src="@drawable/no_image_found"
             app:layout_constraintEnd_toEndOf="parent"
