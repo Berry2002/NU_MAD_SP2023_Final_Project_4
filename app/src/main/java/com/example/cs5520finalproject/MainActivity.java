@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity
                     case (R.id.fragmentRankingsPage):
                         replaceFragment(new FragmentRankingsPage());
                         break;
+                    case (R.id.fragmentReviewsHomePage):
+                        replaceFragment(new FragmentReviewsHomePage(currentUserLocalType));
+                        break;
                 }
                 return true;
             }
@@ -148,8 +151,8 @@ public class MainActivity extends AppCompatActivity
     @Override
 
     public void goToPathReviews(Path path) {
-        replaceFragment(new FragmentPathReviewsPage(path));
-    } 
+        replaceFragment(new FragmentPathReviewsPage(currentUserLocalType, path));
+    }
     public void changeProfilePicture() {
         checkForCameraPermission();
     }

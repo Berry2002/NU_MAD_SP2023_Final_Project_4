@@ -25,4 +25,9 @@
         android:name="com.example.cs5520finalproject.FragmentSearchPage"
         android:label="fragment_search_page"
         tools:layout="@layout/fragment_search_page" />
+    <fragment
+        android:id="@+id/fragmentReviewsHomePage"
+        android:name="com.example.cs5520finalproject.FragmentReviewsHomePage"
+        android:label="fragment_reviews_home_page"
+        tools:layout="@layout/fragment_reviews_home_page" />
 </navigation>
