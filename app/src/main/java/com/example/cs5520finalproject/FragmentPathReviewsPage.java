@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -90,16 +91,7 @@ public class FragmentPathReviewsPage extends Fragment {
                     Review review = new Review(currentUser.getEmail(), reviewTitle, reviewComment);
 
                     uploadReviewToFirebase(review);
-                    editTextReviewTitle.setText("");
-                    editTextReviewComment.setText("");
 
-                    recyclerViewReviewsAdapter.notifyDataSetChanged();
-
-                    try {
-                        InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-                    } catch (Exception e) {
-                    }
 
                 }else{
                     if( !reviewTitle.equals("")) {
@@ -121,7 +113,25 @@ public class FragmentPathReviewsPage extends Fragment {
         db.collection(Tags.PATHS)
                 .document(this.selectedPath.getPathID())
                 .collection(Tags.REVIEWS)
-                .add(review);
+                .add(review)
+
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        editTextReviewTitle.setText("");
+                        editTextReviewComment.setText("");
+
+                        reviews.add(review);
+                        fetchReviewsForThisPath();
+                        recyclerViewReviewsAdapter.notifyDataSetChanged();
+
+                        try {
+                            InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                        } catch (Exception e) {
+                        }
+                    }
+                });
     }
 
     private void fetchReviewsForThisPath() {

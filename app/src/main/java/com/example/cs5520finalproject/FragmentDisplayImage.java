@@ -85,7 +85,7 @@ public class FragmentDisplayImage extends Fragment {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                mListener.onUploadButtonPressed(imageUri, progressBar);
+                mListener.onUploadButtonPressed(imageUri);
             }
         });
         return view;
@@ -104,6 +104,6 @@ public class FragmentDisplayImage extends Fragment {
     public interface RetakePhoto{
         void onRetakePressed();
 
-        void onUploadButtonPressed(Uri imageUri, ProgressBar progressBar);
+        void onUploadButtonPressed(Uri imageUri);
     }
 }

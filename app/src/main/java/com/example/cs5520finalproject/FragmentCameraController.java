@@ -112,9 +112,9 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
         long timestamp = System.currentTimeMillis();
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, timestamp);
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE,"image/jpeg");
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P){
-            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH,"Pictures/CameraX-Image");
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P){
+            contentValues.put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image");
         }
 
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions
@@ -123,7 +123,6 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues
         ).build();
-
 
         imageCapture.takePicture(outputFileOptions,
                 ContextCompat.getMainExecutor(getContext()),

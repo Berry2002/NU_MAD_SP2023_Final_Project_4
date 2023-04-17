@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -31,6 +33,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -45,12 +48,14 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
-    private User currentUserLocalType;
 
+    private FirebaseStorage storage;
+    private User currentUserLocalType;
 
     public MainActivity() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
+        this.storage = FirebaseStorage.getInstance(); // getting the instance of FirebaseStorage....
         this.currentUser = this.mAuth.getCurrentUser();
     }
 
@@ -329,21 +334,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onUploadButtonPressed(Uri imageUri, ProgressBar progressBar) {
+    public void onUploadButtonPressed(Uri imageUri) {
         // Upload an image from local file....
-//        StorageReference storageReference = storage.getReference().child("images/"+imageUri.getLastPathSegment());
-//        UploadTask uploadImage = storageReference.putFile(imageUri);
-//        uploadImage.addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(MainActivity.this, "Upload Failed! Try again!", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                        Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+        StorageReference storageReference = storage.getReference().child("images/"+imageUri.getLastPathSegment());
+        UploadTask uploadImage = storageReference.putFile(imageUri);
+        uploadImage.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "Upload Failed! Try again!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
