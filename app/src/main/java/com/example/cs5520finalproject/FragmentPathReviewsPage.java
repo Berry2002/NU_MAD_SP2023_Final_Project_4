@@ -20,6 +20,8 @@ public class FragmentPathReviewsPage extends Fragment {
 
     private FirebaseFirestore db;
     private Path selectedPath;
+    private User currentUser;
+
     private TextView textViewPathNameReviews;
     private RecyclerView recyclerViewReviews;
     private RecyclerView.LayoutManager recyclerViewReviewsLayoutManager;
@@ -33,9 +35,11 @@ public class FragmentPathReviewsPage extends Fragment {
     }
 
 
+
     public FragmentPathReviewsPage(Path path) {
         this.selectedPath = selectedPath;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,13 +53,16 @@ public class FragmentPathReviewsPage extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_path_reviews_page, container, false);
 
+
         textViewPathNameReviews = view.findViewById(R.id.textView_IndividualPathNameReviews);
+
         editTextReviewTitle = view.findViewById(R.id.editText_ReviewTitle);
         editTextReviewComment = view.findViewById(R.id.editText_ReviewComment);
         buttonPostReview = view.findViewById(R.id.button_PostReview);
 
         recyclerViewReviews = view.findViewById(R.id.recyclerViewReviews);
         recyclerViewReviewsLayoutManager = new LinearLayoutManager(getContext());
+
         recyclerViewReviewsAdapter = new ReviewsAdapter();
         recyclerViewReviews.setLayoutManager(recyclerViewReviewsLayoutManager);
         recyclerViewReviews.setAdapter(recyclerViewReviewsAdapter);
