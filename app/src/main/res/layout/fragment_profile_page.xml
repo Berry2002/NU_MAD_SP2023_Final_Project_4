@@ -11,10 +11,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/quest_light_pink"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -31,7 +34,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/infoMessage_inProfilePage" />
 
-            <EditText
+            <TextView
                 android:id="@+id/displayName_inProfilePage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,25 +74,14 @@
                 android:id="@+id/exp_inProfilePage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="44dp"
                 android:background="@color/quest_cyan"
                 android:fontFamily="@font/bergen_sans_semi_bold"
                 android:text="EXP: 2000 points"
                 app:layout_constraintEnd_toEndOf="@+id/currentPath_inProfilePage"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/currentPath_inProfilePage"
                 app:layout_constraintTop_toBottomOf="@+id/currentPath_inProfilePage" />
-
-            <Button
-                android:id="@+id/updateProfileButton_inProfilePage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Update Profile"
-                android:textColor="@color/quest_gold"
-                app:iconTint="@color/quest_pink"
-                app:layout_constraintEnd_toEndOf="@+id/exp_inProfilePage"
-                app:layout_constraintStart_toStartOf="@+id/exp_inProfilePage"
-                app:layout_constraintTop_toBottomOf="@+id/exp_inProfilePage" />
 
             <TextView
                 android:id="@+id/infoMessage_inProfilePage"
@@ -111,19 +103,20 @@
                 android:background="@color/quest_light_pink"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.515"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/travelLog_textView" />
+                app:layout_constraintTop_toBottomOf="@+id/travelLog_textView"
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/travelLog_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
                 android:fontFamily="@font/bergen_sans_regular"
                 android:text="View Your Travel Log:"
-                app:layout_constraintEnd_toEndOf="@+id/updateProfileButton_inProfilePage"
-                app:layout_constraintStart_toStartOf="@+id/updateProfileButton_inProfilePage"
-                app:layout_constraintTop_toBottomOf="@+id/updateProfileButton_inProfilePage" />
+                app:layout_constraintEnd_toEndOf="@+id/exp_inProfilePage"
+                app:layout_constraintStart_toStartOf="@+id/exp_inProfilePage"
+                app:layout_constraintTop_toBottomOf="@+id/exp_inProfilePage" />
 
             <ImageButton
                 android:id="@+id/logoutButton_profilePage"
