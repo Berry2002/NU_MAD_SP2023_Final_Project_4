@@ -30,42 +30,46 @@
             android:id="@+id/constraintLayout_WriteReview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <EditText
                 android:id="@+id/editText_ReviewTitle"
-                android:layout_width="match_parent"
-                android:layout_height="46dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:ems="10"
                 android:fontFamily="@font/tcm"
-                tools:layout_editor_absoluteX="16dp"
                 android:hint="@string/review_title"
                 android:inputType="textPersonName"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toTopOf="@+id/editText_ReviewComment"
+                app:layout_constraintEnd_toStartOf="@+id/button_PostReview"
+                app:layout_constraintStart_toStartOf="@+id/editText_ReviewComment" />
 
 
             <EditText
                 android:id="@+id/editText_ReviewComment"
                 android:layout_width="382dp"
-                android:layout_height="78dp"
+                android:layout_height="wrap_content"
                 android:ems="10"
                 android:fontFamily="@font/tcm"
                 android:gravity="start|top"
                 android:hint="@string/write_your_review"
                 android:inputType="textMultiLine"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/editText_ReviewTitle"
-                app:layout_constraintTop_toBottomOf="@+id/editText_ReviewTitle" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <Button
                 android:id="@+id/button_PostReview"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/bergen_sans_regular"
                 android:text="@string/post_review"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText_ReviewComment" />
+                app:layout_constraintBottom_toBottomOf="@+id/editText_ReviewTitle"
+                app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView
