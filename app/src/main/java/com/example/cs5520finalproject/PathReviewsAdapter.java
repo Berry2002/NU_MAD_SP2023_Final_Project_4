@@ -81,6 +81,8 @@ public class PathReviewsAdapter extends RecyclerView.Adapter<PathReviewsAdapter.
         });
     }
 
+
+
     @Override
     public int getItemCount() {
         return this.mPaths.size();

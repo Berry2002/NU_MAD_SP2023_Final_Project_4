@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void goToPathReviews(Path path) {
-        replaceFragment(new Fragment(path));
+        replaceFragment(new FragmentPathReviewsPage(path));
     }
 
     private void populateScreen() {
