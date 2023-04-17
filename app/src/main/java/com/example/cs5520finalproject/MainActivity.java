@@ -229,7 +229,9 @@ public class MainActivity extends AppCompatActivity
     private void replaceFragment(Fragment fragment) {
         this.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
+                .addToBackStack(null)
                 .commit();
+//        binding.bottomNavView.setSelectedItemId();
     }
 
     private void updateInfo(String field, String info) {

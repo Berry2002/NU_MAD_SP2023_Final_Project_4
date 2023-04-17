@@ -44,7 +44,6 @@ public class FragmentProfilePage extends Fragment {
     private User currentUserLocalType;
     private EditText displayName;
     private TextView currentPath, exp, questingSince;
-    private Button updateProfile;
     private ImageButton profilePicture, logOutButton;
     private IFragmentToMainActivity pathway;
     // need: recycler view, adapter, grid layout manager
@@ -102,7 +101,6 @@ public class FragmentProfilePage extends Fragment {
         this.profilePicture = view.findViewById(R.id.profilePicture_inProfilePage);
         this.currentPath = view.findViewById(R.id.currentPath_inProfilePage);
         this.exp = view.findViewById(R.id.exp_inProfilePage);
-        this.updateProfile = view.findViewById(R.id.updateProfileButton_inProfilePage);
         this.questingSince = view.findViewById(R.id.questingSince_inProfilePage);
         this.logOutButton = view.findViewById(R.id.logoutButton_profilePage);
 
@@ -118,13 +116,6 @@ public class FragmentProfilePage extends Fragment {
             @Override
             public void onClick(View view) {
                 pathway.logout();
-            }
-        });
-
-        this.updateProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateProfileInDatabase();
             }
         });
 
@@ -164,49 +155,4 @@ public class FragmentProfilePage extends Fragment {
         }
     }
 
-    private void updateProfileInDatabase() {
-        // basically collect all the information and update the profile information
-        // collect the name and the profile picture
-
-        UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
-
-        this.currentUserLocalType.setDisplayName(this.displayName.getText().toString());
-        builder.setDisplayName(this.currentUserLocalType.getDisplayName());
-        this.updateProfileInformationOnFirestore(Tags.USERS_DISPLAY_NAME, this.currentUserLocalType.getDisplayName());
-
-        // fill this in after the camera X features are implemented
-//        builder.setPhotoUri(Uri.parse(this.currentUserLocalType.getProfilePicture()));
-//        this.updateProfileInformationOnFirestore(Tags.USERS_PROFILE_PICTURE, this.currentUserLocalType.getProfilePicture());
-
-        this.currentUser.updateProfile(builder.build())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // reload information
-                            refreshUserData();
-                        } else {
-                            Log.e("profile page fragment", "onComplete: update profile information on firestore not successful");
-                        }
-                    }
-                });
-    }
-
-    void updateProfileInformationOnFirestore(String field, String information) {
-        Log.d("profile page fragment", "updateProfileInformationOnFirestore: user == null" + (this.currentUser == null));
-        Log.d("profile page fragment", "updateProfileInformationOnFirestore: db == null" + (this.db == null));
-        Log.d("profile page fragment", "updateProfileInformationOnFirestore: user email == null" + (currentUser == null));
-        this.db.collection(Tags.USERS).document(this.currentUserLocalType.getEmail())
-                .update(field, information)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("profile page fragment", "onComplete: update profile information on firestore successful");
-                        } else {
-                            Log.e("profile page fragment", "onComplete: update profile information on firestore not successful");
-                        }
-                    }
-                });
-    }
 }
