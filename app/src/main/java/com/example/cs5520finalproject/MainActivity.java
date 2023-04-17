@@ -146,6 +146,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+
+    public void goToPathReviews(Path path) {
+        replaceFragment(new FragmentPathReviewsPage(path));
+    } 
     public void changeProfilePicture() {
         checkForCameraPermission();
     }
