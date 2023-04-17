@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity
 
                 switch (item.getItemId()) {
                     case (R.id.fragmentQuestHomePage):
+                        Log.d("current firebase user:", currentUser.getDisplayName());
                         replaceFragment(new FragmentQuestHomePage(currentUserLocalType));
                         break;
                     case (R.id.fragmentProfilePage):
@@ -97,8 +98,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void equipPath(Path path) {
         // can only start path if they have no current path
-        if (currentUserLocalType.getCurrentPathID().equals("")) {
-            this.updateCurrentPath(path);
+        if (currentUserLocalType.getCurrentPathID() == null) {
+            this.updateCurrentPath(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
+            this.updateCurrentPath(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
+            currentUserLocalType.setCurrentPathID(path.getPathID());
+            currentUserLocalType.setCurrentPathName(path.getPathName());
             this.updateQuestsCompleted();
             this.populateScreen();
         } else {
@@ -128,6 +132,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void goToHomePage(FirebaseUser currentUser) {
         this.currentUser = currentUser;
+        Log.d("current firebase user:", currentUser.getDisplayName());
         this.populateScreen();
     }
 
@@ -140,10 +145,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void leaveCurrentPath() {
-        Path newPath = new Path();
         Toast.makeText(this,"Current Path removed!",Toast.LENGTH_SHORT).show();
-        newPath.setLocation("");
-        this.updateCurrentPath(newPath);
+        this.updateCurrentPath(Tags.USERS_CURRENT_PATH_ID, null);
+        this.updateCurrentPath(Tags.USERS_CURRENT_PATH_NAME, null);
+        currentUserLocalType.setCurrentPathID(null);
+        currentUserLocalType.setCurrentPathName(null);
+
         this.replaceFragment(new FragmentSearchPage(currentUserLocalType));
         this.populateScreen();
     }
@@ -170,7 +177,7 @@ public class MainActivity extends AppCompatActivity
 
     private void switchToHomePageFragment() {
         String email = this.currentUser.getEmail();
-
+        Log.d("current firebase user:", currentUser.getDisplayName());
         if (email == null) {
             Log.e("main activity", "switchToHomePageFragment: current user's email is null");
         } else {
@@ -179,6 +186,7 @@ public class MainActivity extends AppCompatActivity
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                     if (error == null) {
                         currentUserLocalType = value.toObject(User.class);
+                        Log.d("current firebase user:", currentUser.getDisplayName());
                         // current user retrieved
                         replaceFragment(new FragmentQuestHomePage(currentUserLocalType));
                     } else {
@@ -216,16 +224,14 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
-    private void updateCurrentPath(Path path) {
+    private void updateCurrentPath(String field, String info) {
         this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
-                .update(Tags.USERS_CURRENT_PATH_ID, path.getLocation())
+                .update(field, info)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
                             Log.e("equip path", "onComplete: could not update the current path");
-                        } else {
-                            currentUserLocalType.setCurrentPathName(path.getLocation());
                         }
                     }
                 });

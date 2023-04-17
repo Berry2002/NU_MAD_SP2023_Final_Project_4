@@ -20,6 +20,7 @@ public class Tags {
     public static final String PATHS_LOCATION = "location";
     public static final String PATHS_NUM_QUESTS = "numQuests";
     public static final String PATHS_SUBJECT = "subject";
+    public static final String PATHS_ID = "location";
 
     public static final String QUESTS = "quests";
     public static final String QUESTS_DESCRIPTION = "description";
