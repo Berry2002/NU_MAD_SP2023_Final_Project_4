@@ -30,4 +30,6 @@ public class Tags {
     public static final String QUESTS_EXP_VALUE = "expValue";
 
     public static final String REVIEWS = "reviews";
+
+    public static final String FIREBASE_STORAGE_BASE = "gs://quest-8f3ba.appspot.com/";
 }

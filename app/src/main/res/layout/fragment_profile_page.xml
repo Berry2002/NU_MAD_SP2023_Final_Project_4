@@ -74,12 +74,11 @@
                 android:id="@+id/exp_inProfilePage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="44dp"
+                android:layout_marginTop="36dp"
                 android:background="@color/quest_cyan"
                 android:fontFamily="@font/bergen_sans_semi_bold"
                 android:text="EXP: 2000 points"
                 app:layout_constraintEnd_toEndOf="@+id/currentPath_inProfilePage"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/currentPath_inProfilePage"
                 app:layout_constraintTop_toBottomOf="@+id/currentPath_inProfilePage" />
 
@@ -112,6 +111,7 @@
                 android:id="@+id/travelLog_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/bergen_sans_regular"
                 android:text="View Your Travel Log:"
                 app:layout_constraintEnd_toEndOf="@+id/exp_inProfilePage"

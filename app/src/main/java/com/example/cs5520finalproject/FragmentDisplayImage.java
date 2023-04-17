@@ -13,10 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
-import com.example.cs5520finalproject.FragmentCameraController;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,7 +38,6 @@ public class FragmentDisplayImage extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static FragmentDisplayImage newInstance(Uri imageUri) {
         FragmentDisplayImage fragment = new FragmentDisplayImage();
         Bundle args = new Bundle();
@@ -94,14 +91,14 @@ public class FragmentDisplayImage extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof FragmentCameraController.DisplayTakenPhoto){
+        if (context instanceof FragmentCameraController.DisplayTakenPhoto) {
             mListener = (RetakePhoto) context;
-        }else{
+        } else {
             throw new RuntimeException(context+" must implement RetakePhoto");
         }
     }
 
-    public interface RetakePhoto{
+    public interface RetakePhoto {
         void onRetakePressed();
 
         void onUploadButtonPressed(Uri imageUri);

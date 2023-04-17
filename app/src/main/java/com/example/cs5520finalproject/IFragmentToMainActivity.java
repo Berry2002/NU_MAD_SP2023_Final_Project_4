@@ -11,7 +11,8 @@ public interface IFragmentToMainActivity {
     void goToPathHighlights(Path path);
     void equipPath(Path selectedPath);
     void leaveCurrentPath();
-
     void goToPathReviews(Path path);
     void changeProfilePicture();
+    void addPictureToTravelLog(String questName);
+    void completeQuest(String questName, int questIndex, int expValue);
 }

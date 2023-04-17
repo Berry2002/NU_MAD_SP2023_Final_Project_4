@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity
         replaceFragment(new FragmentPathReviewsPage(currentUserLocalType, path));
     }
     public void changeProfilePicture() {
+        binding.bottomNavView.setVisibility(View.GONE);
         checkForCameraPermission();
     }
 
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity
             navBar.setVisibility(View.GONE);
         } else { // go to the current user's home page
             navBar.setVisibility(View.VISIBLE);
-            binding.bottomNavView.setSelectedItemId(R.id.fragmentQuestHomePage);
+            navBar.setSelectedItemId(R.id.fragmentQuestHomePage);
             this.switchToHomePageFragment();
         }
     }
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void switchToProfilePageFragment() {
+        binding.bottomNavView.setVisibility(View.VISIBLE);
         String email = this.currentUser.getEmail();
 
         if (email == null) {
@@ -231,7 +233,6 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();
-//        binding.bottomNavView.setSelectedItemId();
     }
 
     private void updateInfo(String field, String info) {
@@ -274,7 +275,7 @@ public class MainActivity extends AppCompatActivity
                 .checkSelfPermission(this,
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
-        if (cameraAllowed && readAllowed && writeAllowed){
+        if (cameraAllowed && readAllowed && writeAllowed) {
             replaceFragment(FragmentCameraController.newInstance());
         } else {
             requestPermissions(new String[]{
@@ -288,9 +289,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length > 2){
+        if(grantResults.length > 2) {
+            binding.bottomNavView.setVisibility(View.GONE);
             replaceFragment(FragmentCameraController.newInstance());
-        } else{
+        } else {
             Toast.makeText(this, "You must allow Camera and Storage permissions!", Toast.LENGTH_LONG).show();
         }
     }
@@ -338,15 +340,25 @@ public class MainActivity extends AppCompatActivity
         // Upload an image from local file....
         StorageReference storageReference = storage.getReference()
                 .child("images/profile/" + currentUserLocalType.getEmail());
-        storageReference = storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/" + currentUserLocalType.getEmail());
+//        storageReference = storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/" + currentUserLocalType.getEmail());
 
         UploadTask uploadImage = storageReference.putFile(imageUri);
-        storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//        storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Uri> task) {
+//                Uri downloadUrl = task.getResult();
+//                currentUserLocalType.setProfilePicture(downloadUrl.getPath());
+//                Log.d("on upload button pressed", "onComplete: " + currentUserLocalType.getProfilePicture());
+//            }
+//        });
+        storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/chen.yime@test.com").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                Uri downloadUrl = task.getResult();
-                currentUserLocalType.setProfilePicture(downloadUrl.getPath());
-                Log.d("on upload button pressed", "onComplete: " + currentUserLocalType.getProfilePicture());
+                if (task.isSuccessful()) {
+                    String downUrl = task.getResult().getPath();
+                    Log.d("main activity/onUploadButtonPressed", "onComplete: download url = " + downUrl);
+                    currentUserLocalType.setProfilePicture(downUrl);
+                }
             }
         });
         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -373,5 +385,31 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
+    }
+
+    @Override
+    public void addPictureToTravelLog(String questName) {
+        binding.bottomNavView.setVisibility(View.GONE);
+        checkForCameraPermission();
+    }
+
+    @Override
+    public void completeQuest(String questName, int questIndex, int expValue) {
+        this.currentUserLocalType.addExp(expValue);
+        this.currentUserLocalType.getCompletedQuests().add(questName);
+        this.db.collection(Tags.PATHS).document(this.currentUserLocalType.getCurrentPathID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Path currentPath = task.getResult().toObject(Path.class);
+
+                    // if there are no more quests in the path - set the path to completed
+                    if (currentPath.getNumQuests() == currentUserLocalType.getCompletedQuests().size()) {
+                        // finished all quests - make the current path stuff empty
+                        currentUserLocalType.completedPath(currentPath.getPathID());
+                    }
+                }
+            }
+        });
     }
 }
