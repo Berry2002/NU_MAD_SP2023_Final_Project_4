@@ -27,9 +27,9 @@
                 android:layout_height="96dp"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="24dp"
+                android:src="@drawable/profile_icon"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/infoMessage_inProfilePage"
-                tools:src="@tools:sample/avatars" />
+                app:layout_constraintTop_toBottomOf="@+id/infoMessage_inProfilePage" />
 
             <EditText
                 android:id="@+id/displayName_inProfilePage"
@@ -104,6 +104,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/logoutButton_profilePage" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/travelLogRecyclerView"
                 android:layout_width="378dp"
                 android:layout_height="357dp"
                 android:layout_marginTop="4dp"
@@ -117,8 +118,9 @@
                 android:id="@+id/travelLog_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:fontFamily="@font/bergen_sans_regular"
-                android:text="View Your Travel Log!"
+                android:text="View Your Travel Log:"
                 app:layout_constraintEnd_toEndOf="@+id/updateProfileButton_inProfilePage"
                 app:layout_constraintStart_toStartOf="@+id/updateProfileButton_inProfilePage"
                 app:layout_constraintTop_toBottomOf="@+id/updateProfileButton_inProfilePage" />

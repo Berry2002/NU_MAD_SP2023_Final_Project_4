@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/quest_gold"
+    tools:context=".FragmentCameraController">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.camera.view.PreviewView
+            android:id="@+id/previewView"
+            android:layout_width="361dp"
+            android:layout_height="487dp"
+            android:layout_marginTop="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/buttonTakePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:clickable="true"
+            android:contentDescription="Take a photo"
+            android:src="@android:drawable/presence_invisible"
+            app:backgroundTint="@color/quest_pink"
+            app:layout_constraintEnd_toEndOf="@+id/previewView"
+            app:layout_constraintStart_toStartOf="@+id/previewView"
+            app:layout_constraintTop_toBottomOf="@+id/previewView" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/buttonOpenGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="88dp"
+            android:clickable="true"
+            android:contentDescription="Browse gallery"
+            android:src="@android:drawable/gallery_thumb"
+            app:backgroundTint="@color/quest_light_pink"
+            app:layout_constraintEnd_toStartOf="@+id/buttonTakePhoto"
+            app:layout_constraintTop_toTopOf="@+id/buttonTakePhoto" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

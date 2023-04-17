@@ -2,18 +2,40 @@ package com.example.cs5520finalproject;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+
+// shows us the current quests that are not done yet
 public class FragmentQuestHomePage extends Fragment {
 
-    private FirebaseUser currUser;
     private User currUserLocalType;
+    private ArrayList<Quest> questsLeftToDo;
+    private FirebaseFirestore db;
+    private QuestAdapter questAdapter;
+    private RecyclerView.LayoutManager questLayoutManager;
+    private RecyclerView questRecyclerView;
+    private TextView equipPathMessage;
 
     public FragmentQuestHomePage() {
         // Required empty public constructor
@@ -21,6 +43,9 @@ public class FragmentQuestHomePage extends Fragment {
 
     public FragmentQuestHomePage(User currUser) {
         this.currUserLocalType = currUser;
+        this.db = FirebaseFirestore.getInstance();
+        this.questsLeftToDo = new ArrayList<Quest>();
+        // extract the list of quests we need to display by going through the database
     }
 
     @Override
@@ -34,6 +59,48 @@ public class FragmentQuestHomePage extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_quest_home_page, container, false);
 
+        Log.d("quest home page", "onCreateView: before assigning the recycler view...");
+        this.equipPathMessage = view.findViewById(R.id.pleaseEquipPath_TextView_HomePage);
+
+        this.questRecyclerView = view.findViewById(R.id.recyclerView_Quests);
+        this.questLayoutManager = new LinearLayoutManager(this.getContext());
+        this.questAdapter = new QuestAdapter(this.questsLeftToDo, this.getContext()); // give the adapter only the quests that are left
+        Log.d("quest home page", "onCreateView: after assigning the recycler view...");
+        Log.d("quest home page", "onCreateView: before setting the adapter");
+        this.questRecyclerView.setLayoutManager(this.questLayoutManager);
+        this.questRecyclerView.setAdapter(this.questAdapter);
+        Log.d("quest home page", "onCreateView: after setting the adapter");
+        this.extractQuestsLeft();
+
         return view;
+    }
+
+    private void extractQuestsLeft() {
+        if (this.currUserLocalType.getCurrentPathID() == null) {
+            this.equipPathMessage.setVisibility(View.VISIBLE);
+        } else {
+            this.equipPathMessage.setVisibility(View.GONE);
+            this.db.collection(Tags.PATHS).document(this.currUserLocalType.getCurrentPathID())
+                    .collection(Tags.QUESTS).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                questsLeftToDo.clear();
+                                for (DocumentSnapshot documentSnapshot : task.getResult()) {
+                                    Quest currQuest = documentSnapshot.toObject(Quest.class);
+                                    Log.d("quest home page", "onComplete: current quest = " + currQuest);
+                                    if (!currUserLocalType.getCompletedQuests().contains(currQuest.getName())) {
+                                        questsLeftToDo.add(currQuest);
+                                    }
+                                }
+                                // notify the data set changed
+                                questAdapter.notifyDataSetChanged();
+                            } else {
+                                Log.e("extract quests left", "onEvent: could not find the current path");
+                            }
+                        }
+                    });
+        }
+
     }
 }

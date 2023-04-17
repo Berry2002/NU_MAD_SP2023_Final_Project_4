@@ -5,17 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">
+    android:background="@color/quest_cyan">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         app:cardBackgroundColor="#00FFFFFF"
         app:cardElevation="0dp">
+        app:cardBackgroundColor="@color/quest_cyan"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        app:contentPadding="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#00FFFFFF">
+            android:background="@color/quest_cyan">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView"

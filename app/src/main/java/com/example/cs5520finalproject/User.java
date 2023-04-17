@@ -8,7 +8,7 @@ public class User {
     private ArrayList<String> travelLog;
     private long startDate;
     private int exp;
-    private String currentPath;
+    private String currentPathID, currentPathName;
     private ArrayList<String> completedPaths;
     private ArrayList<String> completedQuests;
 
@@ -17,8 +17,9 @@ public class User {
     }
 
     public User(String email, String password, String displayName, String profilePicture,
-                ArrayList<String> travelLog, long startDate, int exp, String currentPath,
-                ArrayList<String> completedPaths, ArrayList<String> completedQuests) {
+                ArrayList<String> travelLog, long startDate, int exp, String currentPathID,
+                String currentPathName, ArrayList<String> completedPaths,
+                ArrayList<String> completedQuests) {
         this.email = email;
         this.password = password;
         this.displayName = displayName;
@@ -26,7 +27,8 @@ public class User {
         this.travelLog = travelLog;
         this.startDate = startDate;
         this.exp = exp;
-        this.currentPath = currentPath;
+        this.currentPathID = currentPathID;
+        this.currentPathName = currentPathName;
         this.completedPaths = completedPaths;
         this.completedQuests = completedQuests;
     }
@@ -39,7 +41,8 @@ public class User {
         this.travelLog = new ArrayList<String>();
         this.startDate = new Date().getTime();
         this.exp = 0;
-        this.currentPath = null;
+        this.currentPathID = null;
+        this.currentPathName = null;
         this.completedPaths = new ArrayList<String>();
         this.completedQuests = new ArrayList<String>();
     }
@@ -100,14 +103,6 @@ public class User {
         this.exp = exp;
     }
 
-    public String getCurrentPath() {
-        return currentPath;
-    }
-
-    public void setCurrentPath(String currentPath) {
-        this.currentPath = currentPath;
-    }
-
     public ArrayList<String> getCompletedPaths() {
         return completedPaths;
     }
@@ -122,5 +117,21 @@ public class User {
 
     public void setCompletedQuests(ArrayList<String> completedQuests) {
         this.completedQuests = completedQuests;
+    }
+
+    public String getCurrentPathID() {
+        return currentPathID;
+    }
+
+    public void setCurrentPathID(String currentPathID) {
+        this.currentPathID = currentPathID;
+    }
+
+    public String getCurrentPathName() {
+        return currentPathName;
+    }
+
+    public void setCurrentPathName(String currentPathName) {
+        this.currentPathName = currentPathName;
     }
 }

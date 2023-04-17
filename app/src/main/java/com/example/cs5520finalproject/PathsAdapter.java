@@ -72,7 +72,7 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull PathsAdapter.ViewHolder holder, int position) {
         Path currentPath = this.mPaths.get(position);
 
-        Log.d("current path:", currentPath.getLocation());
+        Log.d("current path:", currentPath.getPathName());
 
         holder.textViewPathDescription.setText(currentPath.getDescription());
         holder.textViewSubject.setText(currentPath.getSubject());

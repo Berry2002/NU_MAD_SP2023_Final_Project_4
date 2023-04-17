@@ -7,6 +7,9 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,7 +47,10 @@ public class FragmentProfilePage extends Fragment {
     private Button updateProfile;
     private ImageButton profilePicture, logOutButton;
     private IFragmentToMainActivity pathway;
-    private boolean displayNameUpdated, profilePictureUpdated;
+    // need: recycler view, adapter, grid layout manager
+    private RecyclerView travelLogRecycler;
+    private TravelLogAdapter travelLogAdapter;
+    private RecyclerView.LayoutManager travelLayoutManager;
 
     public FragmentProfilePage() {
         // Required empty public constructor
@@ -60,8 +67,6 @@ public class FragmentProfilePage extends Fragment {
                 }
             }
         });
-        this.displayNameUpdated = false;
-        this.profilePictureUpdated = false;
     }
 
     public FragmentProfilePage(User currentUserLocalType) {
@@ -101,18 +106,11 @@ public class FragmentProfilePage extends Fragment {
         this.questingSince = view.findViewById(R.id.questingSince_inProfilePage);
         this.logOutButton = view.findViewById(R.id.logoutButton_profilePage);
 
-        this.displayName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                displayNameUpdated = true;
-            }
-        });
-
         this.profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                profilePictureUpdated = true;
                 // prompt the user to open their device and select a photo to upload
+                pathway.changeProfilePicture();
             }
         });
 
@@ -130,11 +128,31 @@ public class FragmentProfilePage extends Fragment {
             }
         });
 
+        this.travelLogRecycler = view.findViewById(R.id.travelLogRecyclerView);
+        this.travelLogAdapter = new TravelLogAdapter(this.currentUserLocalType.getTravelLog(),
+                this.getContext());
+        this.travelLayoutManager = new GridLayoutManager(this.getContext(), 2);
+        this.travelLogRecycler.setLayoutManager(travelLayoutManager);
+        this.travelLogRecycler.setAdapter(this.travelLogAdapter);
+        this.travelLogAdapter.notifyDataSetChanged();
+
+        if (this.currentUserLocalType.getProfilePicture() != null) {
+            Glide.with(this)
+                    .load(Uri.parse(this.currentUserLocalType.getProfilePicture()))
+                    .into(this.profilePicture);
+        }
+
+        this.refreshUserData();
+
+        return view;
+    }
+
+    private void refreshUserData() {
         // call the method to fetch the data
         if (this.currentUserLocalType != null) {
             this.displayName.setText(this.currentUserLocalType.getDisplayName());
-            if (this.currentUserLocalType.getCurrentPath() != null) { // set the current path
-                this.currentPath.setText(String.format("Current Path: %s", this.currentUserLocalType.getCurrentPath()));
+            if (this.currentUserLocalType.getCurrentPathName() != null) { // set the current path
+                this.currentPath.setText(String.format("Current Path: %s", this.currentUserLocalType.getCurrentPathName()));
             } else {
                 this.currentPath.setText("No path equipped currently.");
             }
@@ -144,8 +162,6 @@ public class FragmentProfilePage extends Fragment {
             this.questingSince.setText(String.format("Questing since: %s %s, %s",
                     localDate.getDayOfMonth(), localDate.getMonth(), localDate.getYear()));
         }
-
-        return view;
     }
 
     private void updateProfileInDatabase() {
@@ -154,17 +170,13 @@ public class FragmentProfilePage extends Fragment {
 
         UserProfileChangeRequest.Builder builder = new UserProfileChangeRequest.Builder();
 
-        if (this.displayNameUpdated) {
-            this.currentUserLocalType.setDisplayName(this.displayName.getText().toString());
-            builder.setDisplayName(this.currentUserLocalType.getDisplayName());
-            this.updateProfileInformationOnFirestore(Tags.USERS_DISPLAY_NAME, this.currentUserLocalType.getDisplayName());
-        }
+        this.currentUserLocalType.setDisplayName(this.displayName.getText().toString());
+        builder.setDisplayName(this.currentUserLocalType.getDisplayName());
+        this.updateProfileInformationOnFirestore(Tags.USERS_DISPLAY_NAME, this.currentUserLocalType.getDisplayName());
 
-        if (this.profilePictureUpdated) {
-            // fill this in after the camera X features are implemented
-            builder.setPhotoUri(Uri.parse(this.currentUserLocalType.getProfilePicture()));
-            this.updateProfileInformationOnFirestore(Tags.USERS_PROFILE_PICTURE, this.currentUserLocalType.getProfilePicture());
-        }
+        // fill this in after the camera X features are implemented
+//        builder.setPhotoUri(Uri.parse(this.currentUserLocalType.getProfilePicture()));
+//        this.updateProfileInformationOnFirestore(Tags.USERS_PROFILE_PICTURE, this.currentUserLocalType.getProfilePicture());
 
         this.currentUser.updateProfile(builder.build())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -172,8 +184,9 @@ public class FragmentProfilePage extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             // reload information
-                            Toast.makeText(getContext(), "Profile information updated on Firebase successfully!",
-                                    Toast.LENGTH_SHORT).show();
+                            refreshUserData();
+                        } else {
+                            Log.e("profile page fragment", "onComplete: update profile information on firestore not successful");
                         }
                     }
                 });
@@ -189,11 +202,9 @@ public class FragmentProfilePage extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(getContext(), String.format("%s updated on Firestore successfully!", field),
-                                    Toast.LENGTH_SHORT).show();
+                            Log.d("profile page fragment", "onComplete: update profile information on firestore successful");
                         } else {
-                            Log.e("update profile information on firestore",
-                                    String.format("onComplete: could not update %s information on Firestore", field));
+                            Log.e("profile page fragment", "onComplete: update profile information on firestore not successful");
                         }
                     }
                 });

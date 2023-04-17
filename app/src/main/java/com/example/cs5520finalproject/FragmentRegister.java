@@ -139,7 +139,8 @@ public class FragmentRegister extends Fragment {
         userHash.put(Tags.USERS_EXP, user.getExp());
         userHash.put(Tags.USERS_COMPLETED_PATHS, user.getCompletedPaths());
         userHash.put(Tags.USERS_COMPLETED_QUESTS, user.getCompletedQuests());
-        userHash.put(Tags.USERS_CURRENT_PATH, user.getCurrentPath());
+        userHash.put(Tags.USERS_CURRENT_PATH_ID, user.getCurrentPathID());
+        userHash.put(Tags.USERS_CURRENT_PATH_NAME, user.getCurrentPathName());
         userHash.put(Tags.USERS_PROFILE_PICTURE, user.getProfilePicture());
         userHash.put(Tags.USERS_TRAVEL_LOG, user.getTravelLog());
         userHash.put(Tags.USERS_START_DATE, user.getStartDate());

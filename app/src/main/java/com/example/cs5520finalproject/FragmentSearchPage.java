@@ -67,7 +67,7 @@ public class FragmentSearchPage extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        String currentPath = currentLocalUser.getCurrentPath();
+        String currentPath = currentLocalUser.getCurrentPathName();
 
         View view = inflater.inflate(R.layout.fragment_search_page, container, false);
         search_page_current_path = view.findViewById(R.id.search_page_current_path);
@@ -115,8 +115,8 @@ public class FragmentSearchPage extends Fragment {
                                 Path path = documentSnapshot.toObject(Path.class);
                                 // if user has neither completed the path nor on current path
                                 if (!completedPaths.contains(path.getLocation())
-                                        && (user.getCurrentPath().equals("")
-                                        || !user.getCurrentPath().equals(path.getLocation()))) {
+                                        && (user.getCurrentPathID().equals("")
+                                        || !user.getCurrentPathID().equals(path.getLocation()))) {
                                     mPaths.add(path);
                                 }
                             }
