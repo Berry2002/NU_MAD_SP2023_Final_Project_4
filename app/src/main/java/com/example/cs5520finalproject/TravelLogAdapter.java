@@ -64,6 +64,9 @@ public class TravelLogAdapter extends RecyclerView.Adapter<TravelLogAdapter.View
 
         Glide.with(this.context)
                 .load(Uri.parse(currentImage))
+                .fitCenter()
+                .thumbnail(Glide.with(context).load(R.drawable.loading_image))
+                .error(R.drawable.no_image_found)
                 .into(holder.getTravelLog());
     }
 

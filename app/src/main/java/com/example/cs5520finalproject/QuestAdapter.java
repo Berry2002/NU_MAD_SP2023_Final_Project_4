@@ -103,13 +103,16 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
         Glide.with(this.context)
                 .load(Uri.parse(currentQuest.getImage()))
+                .fitCenter()
+                .thumbnail(Glide.with(context).load(R.drawable.loading_image))
+                .error(R.drawable.no_image_found)
                 .into(holder.getPicture());
 
         holder.getCompleteQuestButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // add the exp from this quest into the user's exp
-                pathway.completeQuest(currentQuest.getName(), position, currentQuest.getExpValue());
+                pathway.completeQuest(currentQuest.getName(), holder.getAdapterPosition(), currentQuest.getExpValue());
                 // add the quest to the list of quests done
                 // must add the quest to the list of quests done
                 pathway.addPictureToTravelLog(currentQuest.getName());

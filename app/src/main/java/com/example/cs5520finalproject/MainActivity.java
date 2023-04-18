@@ -52,6 +52,22 @@ public class MainActivity extends AppCompatActivity
     private FirebaseStorage storage;
     private User currentUserLocalType;
 
+    // from search paths page to path highlight page
+    //Retrieving an image from gallery....
+    private ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode()==RESULT_OK){
+                        Intent data = result.getData();
+                        Uri selectedImageUri = data.getData();
+                        replaceFragment(FragmentDisplayImage.newInstance(selectedImageUri));
+                    }
+                }
+            }
+    );
+
     public MainActivity() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
@@ -94,7 +110,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    // from search paths page to path highlight page
     @Override
     public void goToPathHighlights(Path path) {
         replaceFragment(new FragmentEquipPathPage(path));
@@ -104,12 +119,12 @@ public class MainActivity extends AppCompatActivity
     public void equipPath(Path path) {
         // can only start path if they have no current path
         if (currentUserLocalType.getCurrentPathID() == null) {
-        
+
             this.updateInfo(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
             this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
             currentUserLocalType.setCurrentPathID(path.getPathID());
             currentUserLocalType.setCurrentPathName(path.getPathName());
-            
+
             this.updateQuestsCompleted();
             this.populateScreen();
         } else {
@@ -161,12 +176,12 @@ public class MainActivity extends AppCompatActivity
         this.replaceFragment(new FragmentSearchPage(currentUserLocalType));
         this.populateScreen();
     }
-
     @Override
 
     public void goToPathReviews(Path path) {
         replaceFragment(new FragmentPathReviewsPage(currentUserLocalType, path));
     }
+
     public void changeProfilePicture() {
         binding.bottomNavView.setVisibility(View.GONE);
         checkForCameraPermission();
@@ -175,8 +190,8 @@ public class MainActivity extends AppCompatActivity
     private void populateScreen() {
         BottomNavigationView navBar = findViewById(R.id.bottomNavView);
         if (this.currentUser == null) { // if no user is logged in, we prompt login/register
-            replaceFragment(new FragmentAuthentication());
             navBar.setVisibility(View.GONE);
+            replaceFragment(new FragmentAuthentication());
         } else { // go to the current user's home page
             navBar.setVisibility(View.VISIBLE);
             navBar.setSelectedItemId(R.id.fragmentQuestHomePage);
@@ -308,21 +323,6 @@ public class MainActivity extends AppCompatActivity
         openGallery();
     }
 
-    //Retrieving an image from gallery....
-    ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if(result.getResultCode()==RESULT_OK){
-                        Intent data = result.getData();
-                        Uri selectedImageUri = data.getData();
-                        replaceFragment(FragmentDisplayImage.newInstance(selectedImageUri));
-                    }
-                }
-            }
-    );
-
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -339,7 +339,7 @@ public class MainActivity extends AppCompatActivity
     public void onUploadButtonPressed(Uri imageUri) {
         // Upload an image from local file....
         StorageReference storageReference = storage.getReference()
-                .child("images/profile/" + currentUserLocalType.getEmail());
+                .child(Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + Tags.FIREBASE_STORAGE_PROFILE_PICTURE);
 //        storageReference = storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/" + currentUserLocalType.getEmail());
 
         UploadTask uploadImage = storageReference.putFile(imageUri);
@@ -351,26 +351,26 @@ public class MainActivity extends AppCompatActivity
 //                Log.d("on upload button pressed", "onComplete: " + currentUserLocalType.getProfilePicture());
 //            }
 //        });
-        storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/chen.yime@test.com").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    String downUrl = task.getResult().getPath();
-                    Log.d("main activity/onUploadButtonPressed", "onComplete: download url = " + downUrl);
-                    currentUserLocalType.setProfilePicture(downUrl);
-                }
-            }
-        });
-        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String imgPathName = uri.getPath();
-                Log.d("imageUri.getPath(): ", imgPathName);
-                currentUserLocalType.setProfilePicture(imgPathName);
-                updateInfo(Tags.USERS_PROFILE_PICTURE, imgPathName);
-                switchToProfilePageFragment();
-            }
-        });
+//        storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/chen.yime@test.com").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Uri> task) {
+//                if (task.isSuccessful()) {
+//                    String downUrl = task.getResult().getPath();
+//                    Log.d("main activity/onUploadButtonPressed", "onComplete: download url = " + downUrl);
+//                    currentUserLocalType.setProfilePicture(downUrl);
+//                }
+//            }
+//        });
+//        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String imgPathName = uri.getPath();
+//                Log.d("imageUri.getPath(): ", imgPathName);
+//                currentUserLocalType.setProfilePicture(imgPathName);
+//                updateInfo(Tags.USERS_PROFILE_PICTURE, imgPathName);
+//                switchToProfilePageFragment();
+//            }
+//        });
         uploadImage.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
