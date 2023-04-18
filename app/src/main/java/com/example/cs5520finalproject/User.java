@@ -3,6 +3,9 @@ package com.example.cs5520finalproject;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * A local User object that stores the data as a Firebase user.
+ */
 public class User {
     private String email, password, displayName, profilePicture;
     private ArrayList<String> travelLog;
@@ -135,10 +138,18 @@ public class User {
         this.currentPathName = currentPathName;
     }
 
+    /**
+     * Add the given exp to the current exp.
+     * @param expAddition the given exp points
+     */
     public void addExp(int expAddition) {
         this.exp += expAddition;
     }
 
+    /**
+     * Update corresponding fields when the user completes a path.
+     * @param pathID pathID of the completed path
+     */
     public void completedPath(String pathID) {
         this.getCompletedPaths().add(pathID);
         this.setCurrentPathID(null);

@@ -38,19 +38,21 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 
+/**
+ * The Main Activity that is responsible for switching between fragments.
+ */
 public class MainActivity extends AppCompatActivity
         implements IFragmentToMainActivity,
         FragmentCameraController.DisplayTakenPhoto,
         FragmentDisplayImage.RetakePhoto {
     private static final int PERMISSIONS_CODE = 0x100;
-    private String imageLocation;
+    private String imageLocation; // image path
     ActivityMainBinding binding;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private FirebaseUser currentUser;
-
-    private FirebaseStorage storage;
-    private User currentUserLocalType;
+    private FirebaseAuth mAuth; // Firebase Authentication User
+    private FirebaseFirestore db; // Firebase
+    private FirebaseUser currentUser; // current FirebaseUser
+    private FirebaseStorage storage; // FirebaseStorage for storing images
+    private User currentUserLocalType; // local User object
 
     // from search paths page to path highlight page
     //Retrieving an image from gallery....
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity
     public MainActivity() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
-        this.storage = FirebaseStorage.getInstance(); // getting the instance of FirebaseStorage....
+        this.storage = FirebaseStorage.getInstance(); // getting the instance of FirebaseStorage
         this.currentUser = this.mAuth.getCurrentUser();
     }
 
@@ -119,7 +121,6 @@ public class MainActivity extends AppCompatActivity
     public void equipPath(Path path) {
         // can only start path if they have no current path
         if (currentUserLocalType.getCurrentPathID() == null) {
-
             this.updateInfo(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
             this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
             currentUserLocalType.setCurrentPathID(path.getPathID());
@@ -209,7 +210,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onUploadButtonPressed(Uri imageUri) {
-        // Upload an image from local file....
+        // Upload an image from local file
         StorageReference storageReference = storage.getReference()
                 .child(Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + this.imageLocation);
 
@@ -268,6 +269,9 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Get the appropriate screen when landing.
+     */
     private void populateScreen() {
         BottomNavigationView navBar = findViewById(R.id.bottomNavView);
         if (this.currentUser == null) { // if no user is logged in, we prompt login/register
@@ -280,6 +284,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * go to quest home page fragment to see all quests left
+     */
     private void switchToHomePageFragment() {
         String email = this.currentUser.getEmail();
         if (email == null) {
@@ -299,6 +306,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Go to profile page fragment.
+     */
     private void switchToProfilePageFragment() {
         binding.bottomNavView.setVisibility(View.VISIBLE);
         String email = this.currentUser.getEmail();
@@ -321,6 +331,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Abstract method for replacing the current fragment with the given fragment.
+     * @param fragment the fragment to be switched to
+     */
     private void replaceFragment(Fragment fragment) {
         this.getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
@@ -328,6 +342,11 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
+    /**
+     * Update the given key with the given value in Firebase.
+     * @param field key in Firebase
+     * @param info value in Firebase
+     */
     private void updateInfo(String field, Object info) {
         this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
                 .update(field, info)
@@ -341,6 +360,10 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
+    /**
+     * Update the corresponding data when the user completes a quest.
+     * @param questName name of the quest completed
+     */
     private void updateQuestsCompleted(String questName) {
         ArrayList<String> questsCompleted;
         if (questName.equals("")) { // if starting a new path, set completed quests to empty list
@@ -354,6 +377,9 @@ public class MainActivity extends AppCompatActivity
         currentUserLocalType.setCompletedQuests(questsCompleted);
     }
 
+    /**
+     * Check for user's camera permission.
+     */
     private void checkForCameraPermission() {
         // Asking for permissions in runtime......
         Boolean cameraAllowed = ContextCompat
@@ -377,6 +403,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Use the gallery launcher to load the gallery.
+     */
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -385,6 +414,10 @@ public class MainActivity extends AppCompatActivity
         galleryLauncher.launch(intent);
     }
 
+    /**
+     * Update the corresponding data when the user completes a path.
+     * @param pathID the path id a user has completed
+     */
     private void updatePathsCompleted(String pathID) {
         ArrayList<String> pathsCompleted = this.currentUserLocalType.getCompletedPaths();
         pathsCompleted.add(pathID);

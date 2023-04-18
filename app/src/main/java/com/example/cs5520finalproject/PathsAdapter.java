@@ -17,6 +17,9 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+/**
+ * A PathAdapter that is responsible for displaying the Paths search fragment.
+ */
 public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> {
 
     private IFragmentToMainActivity mListener;
@@ -71,8 +74,6 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull PathsAdapter.ViewHolder holder, int position) {
         Path currentPath = this.mPaths.get(position);
-
-        Log.d("current path:", currentPath.getPathName());
 
         holder.textViewPathDescription.setText(currentPath.getDescription());
         holder.textViewSubject.setText(currentPath.getSubject());
