@@ -24,108 +24,132 @@
             android:layout_height="match_parent"
             android:background="@color/quest_light_pink">
 
-            <ImageButton
-                android:id="@+id/profilePicture_inProfilePage"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="24dp"
-                android:src="@drawable/profile_icon"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/infoMessage_inProfilePage" />
-
-            <TextView
-                android:id="@+id/displayName_inProfilePage"
-                android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
+                android:layout_width="377dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:fontFamily="@font/tccb"
-                android:hint="Current Display Name"
-                android:textColor="@color/quest_pink"
-                app:layout_constraintStart_toEndOf="@+id/profilePicture_inProfilePage"
-                app:layout_constraintTop_toTopOf="@+id/profilePicture_inProfilePage" />
-
-            <TextView
-                android:id="@+id/questingSince_inProfilePage"
-                android:layout_width="139dp"
-                android:layout_height="49dp"
-                android:ellipsize="end"
-                android:fontFamily="@font/bergen_sans_regular"
-                android:text="Questing Since 2023"
-                android:textColor="@color/quest_pink"
-                app:layout_constraintBottom_toBottomOf="@+id/profilePicture_inProfilePage"
-                app:layout_constraintStart_toStartOf="@+id/displayName_inProfilePage"
-                app:layout_constraintTop_toBottomOf="@+id/displayName_inProfilePage" />
-
-            <TextView
-                android:id="@+id/currentPath_inProfilePage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 android:background="@color/quest_gold"
-                android:fontFamily="@font/bergen_sans_semi_bold_italic"
-                android:text="Current Path: [xxxx]"
+                app:cardCornerRadius="4dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profilePicture_inProfilePage" />
+                app:layout_constraintTop_toBottomOf="@+id/infoMessage_inProfilePage">
 
-            <TextView
-                android:id="@+id/exp_inProfilePage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
-                android:background="@color/quest_cyan"
-                android:fontFamily="@font/bergen_sans_semi_bold"
-                android:text="EXP: 2000 points"
-                app:layout_constraintEnd_toEndOf="@+id/currentPath_inProfilePage"
-                app:layout_constraintStart_toStartOf="@+id/currentPath_inProfilePage"
-                app:layout_constraintTop_toBottomOf="@+id/currentPath_inProfilePage" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/questingSince_inProfilePage"
+                        android:layout_width="143dp"
+                        android:layout_height="23dp"
+                        android:layout_marginTop="12dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/bergen_sans_regular"
+                        android:text="Questing Since 2023"
+                        android:textColor="@color/quest_pink"
+                        app:layout_constraintEnd_toEndOf="@+id/displayName_inProfilePage"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="@+id/displayName_inProfilePage"
+                        app:layout_constraintTop_toBottomOf="@+id/displayName_inProfilePage" />
+
+                    <TextView
+                        android:id="@+id/currentPath_inProfilePage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/quest_gold"
+                        android:fontFamily="@font/bergen_sans_semi_bold_italic"
+                        android:text="Current Path: [xxxx]"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/profilePicture_inProfilePage" />
+
+                    <ImageButton
+                        android:id="@+id/profilePicture_inProfilePage"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/profile_icon"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/exp_inProfilePage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@color/quest_cyan"
+                        android:fontFamily="@font/bergen_sans_semi_bold"
+                        android:text="EXP: 2000 points"
+                        app:layout_constraintEnd_toEndOf="@+id/currentPath_inProfilePage"
+                        app:layout_constraintStart_toStartOf="@+id/currentPath_inProfilePage"
+                        app:layout_constraintTop_toBottomOf="@+id/currentPath_inProfilePage" />
+
+                    <TextView
+                        android:id="@+id/displayName_inProfilePage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/bergen_sans_semi_bold"
+                        android:hint="Display Name"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textColor="@color/quest_pink"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/profilePicture_inProfilePage"
+                        app:layout_constraintTop_toTopOf="@+id/profilePicture_inProfilePage" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/infoMessage_inProfilePage"
+                android:layout_width="175dp"
+                android:layout_height="21dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/tccm"
+                android:text="You can update your profile picture!"
+                android:textAlignment="viewStart"
+                android:textColor="@color/quest_blue"
+                app:layout_constraintStart_toStartOf="@+id/cardView2"
+                app:layout_constraintTop_toBottomOf="@+id/logoutButton_profilePage" />
+
+            <TextView
+                android:id="@+id/travelLog_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/bergen_sans_bold"
-                android:text="You can update your display name and profile picture!"
-                android:textAlignment="center"
-                android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/bergen_sans_regular"
+                android:text="View Your Travel Log:"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/logoutButton_profilePage" />
+                app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/travelLogRecyclerView"
                 android:layout_width="378dp"
-                android:layout_height="357dp"
-                android:layout_marginTop="4dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:background="@color/quest_light_pink"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.515"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/travelLog_textView"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="1.0">
 
-            <TextView
-                android:id="@+id/travelLog_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/bergen_sans_regular"
-                android:text="View Your Travel Log:"
-                app:layout_constraintEnd_toEndOf="@+id/exp_inProfilePage"
-                app:layout_constraintStart_toStartOf="@+id/exp_inProfilePage"
-                app:layout_constraintTop_toBottomOf="@+id/exp_inProfilePage" />
+            </androidx.recyclerview.widget.RecyclerView>
 
             <ImageButton
                 android:id="@+id/logoutButton_profilePage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
                 android:backgroundTint="@color/quest_light_pink"
-                android:foregroundTint="@color/black"
+                android:foregroundTint="@color/quest_pink"
                 android:src="@android:drawable/ic_lock_power_off"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
