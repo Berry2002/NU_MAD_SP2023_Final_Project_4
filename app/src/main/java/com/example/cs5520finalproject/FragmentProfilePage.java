@@ -126,7 +126,7 @@ public class FragmentProfilePage extends Fragment {
 
         this.travelLogRecycler = view.findViewById(R.id.travelLogRecyclerView);
         this.travelLogAdapter = new TravelLogAdapter(this.currentUserLocalType.getTravelLog(),
-                this.getContext());
+                this.getContext(), this.currentUserLocalType.getEmail());
         this.travelLayoutManager = new GridLayoutManager(this.getContext(), 2);
         this.travelLogRecycler.setLayoutManager(travelLayoutManager);
         this.travelLogRecycler.setAdapter(this.travelLogAdapter);

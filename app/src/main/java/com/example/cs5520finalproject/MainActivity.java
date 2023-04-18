@@ -182,8 +182,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void changeProfilePicture() {
-        binding.bottomNavView.setVisibility(View.GONE);
         this.imageLocation = Tags.FIREBASE_STORAGE_PROFILE_PICTURE;
+        binding.bottomNavView.setVisibility(View.GONE);
         checkForCameraPermission();
     }
 
@@ -348,37 +348,8 @@ public class MainActivity extends AppCompatActivity
         StorageReference storageReference = storage.getReference()
                 .child(Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + this.imageLocation);
 
-//        storageReference = storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/" + currentUserLocalType.getEmail());
-
         UploadTask uploadImage = storageReference.putFile(imageUri);
-//        storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Uri> task) {
-//                Uri downloadUrl = task.getResult();
-//                currentUserLocalType.setProfilePicture(downloadUrl.getPath());
-//                Log.d("on upload button pressed", "onComplete: " + currentUserLocalType.getProfilePicture());
-//            }
-//        });
-//        storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/chen.yime@test.com").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Uri> task) {
-//                if (task.isSuccessful()) {
-//                    String downUrl = task.getResult().getPath();
-//                    Log.d("main activity/onUploadButtonPressed", "onComplete: download url = " + downUrl);
-//                    currentUserLocalType.setProfilePicture(downUrl);
-//                }
-//            }
-//        });
-//        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                String imgPathName = uri.getPath();
-//                Log.d("imageUri.getPath(): ", imgPathName);
-//                currentUserLocalType.setProfilePicture(imgPathName);
-//                updateInfo(Tags.USERS_PROFILE_PICTURE, imgPathName);
-//                switchToProfilePageFragment();
-//            }
-//        });
+
         uploadImage.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -420,8 +391,25 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void addPictureToTravelLog(String questName) {
+        this.imageLocation =  "/" + Tags.FIREBASE_STORAGE_TRAVEL_LOG + questName + ".jpg";
         binding.bottomNavView.setVisibility(View.GONE);
-        checkForCameraPermission();
+
+        this.currentUserLocalType.getTravelLog().add(this.imageLocation); // add it to the local user
+
+        // update on Firebase
+        this.db.collection(Tags.USERS).document(this.currentUserLocalType.getEmail())
+                .update(Tags.USERS_TRAVEL_LOG, this.currentUserLocalType.getTravelLog())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            checkForCameraPermission();
+                        } else {
+                            Log.e("main activity", "add picture to travel log failed");
+                        }
+                    }
+                });
+
     }
 
     // update both database user & local user exp
@@ -443,7 +431,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void completeQuest(String questName, int questIndex, int expValue) {
-        this.imageLocation = Tags.FIREBASE_STORAGE_TRAVEL_LOG + "/" + questName + ".jpg";
+
         this.currentUserLocalType.addExp(expValue);
         this.currentUserLocalType.getCompletedQuests().add(questName);
         updateExp(expValue); // update user exp (local & database)

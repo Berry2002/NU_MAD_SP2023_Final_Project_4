@@ -12,6 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -19,14 +23,16 @@ public class TravelLogAdapter extends RecyclerView.Adapter<TravelLogAdapter.View
 
     ArrayList<String> images;
     private Context context; // for Glide
+    private String currentUser;
 
     public TravelLogAdapter() {
         // required empty constructor
     }
 
-    public TravelLogAdapter(ArrayList<String> images, Context context) {
+    public TravelLogAdapter(ArrayList<String> images, Context context, String currentUser) {
         this.images = images;
         this.context = context;
+        this.currentUser = currentUser;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -56,18 +62,35 @@ public class TravelLogAdapter extends RecyclerView.Adapter<TravelLogAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull TravelLogAdapter.ViewHolder holder, int position) {
-        String currentImage = this.images.get(position);
+        String imgPath = currentUser + this.images.get(position);
+        imgPath = Tags.FIREBASE_STORAGE_BASE + this.currentUser /*+ "/"*/ + this.images.get(position);
 
-        Log.d("travel log adapter", "onBindViewHolder: current travel log " + currentImage);
+        Log.d("travel log adapter", "onBindViewHolder: current travel log " + imgPath);
         Log.d("travel log adapter", "onBindViewHolder: holder.getTravelLog() == null is "
                 + (holder.getTravelLog() == null));
 
-        Glide.with(this.context)
-                .load(Uri.parse(currentImage))
-                .fitCenter()
-                .thumbnail(Glide.with(context).load(R.drawable.loading_image))
-                .error(R.drawable.no_image_found)
-                .into(holder.getTravelLog());
+        FirebaseStorage mStorage = FirebaseStorage.getInstance();
+        StorageReference storageRef = mStorage.getReference().child(imgPath);
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(context)
+                        .load(uri)
+                        .fitCenter()
+                        .thumbnail(Glide.with(context).load(R.drawable.loading_image))
+                        .error(R.drawable.profile_icon)
+                        .into(holder.getTravelLog());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Glide.with(context)
+                        .load(R.drawable.no_image_found)
+                        .fitCenter()
+                        .into(holder.getTravelLog());
+            }
+        });
     }
 
     @Override
