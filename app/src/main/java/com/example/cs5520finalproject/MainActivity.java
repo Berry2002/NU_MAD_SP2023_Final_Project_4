@@ -250,10 +250,12 @@ public class MainActivity extends AppCompatActivity
      * @param fragment the fragment to be switched to
      */
     private void replaceFragment(Fragment fragment) {
-        this.getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit();
+        if (!this.getSupportFragmentManager().isDestroyed()) {
+            this.getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
     }
 
     /**
