@@ -22,7 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +34,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -45,6 +50,7 @@ public class FragmentProfilePage extends Fragment {
     private TextView currentPath, exp, questingSince, displayName;
     private ImageButton profilePicture, logOutButton;
     private IFragmentToMainActivity pathway;
+    private Context context;
     private RecyclerView travelLogRecycler;
     private TravelLogAdapter travelLogAdapter;
     private RecyclerView.LayoutManager travelLayoutManager;
@@ -83,6 +89,7 @@ public class FragmentProfilePage extends Fragment {
         super.onAttach(context);
         if (context instanceof IFragmentToMainActivity) {
             this.pathway = (IFragmentToMainActivity) context;
+            this.context = context;
         } else {
             throw new IllegalStateException(context + " should implement IFragmentToMainActivity");
         }
@@ -125,12 +132,6 @@ public class FragmentProfilePage extends Fragment {
         this.travelLogRecycler.setAdapter(this.travelLogAdapter);
         this.travelLogAdapter.notifyDataSetChanged();
 
-        if (this.currentUserLocalType.getProfilePicture() != null) {
-            Glide.with(this)
-                    .load(Uri.parse(this.currentUserLocalType.getProfilePicture()))
-                    .into(this.profilePicture);
-        }
-
         this.refreshUserData();
 
         return view;
@@ -151,6 +152,34 @@ public class FragmentProfilePage extends Fragment {
             this.questingSince.setText(String.format("Questing since: %s %s, %s",
                     localDate.getDayOfMonth(), localDate.getMonth(), localDate.getYear()));
         }
+        refreshProfilePicture();
+    }
+
+    private void refreshProfilePicture() {
+        String imgPath = Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + Tags.FIREBASE_STORAGE_PROFILE_PICTURE;
+//        imgPath = "https://firebasestorage.googleapis.com/v0/b/quest-8f3ba.appspot.com/o/images%2Fsanjana%40gmail.com%2Fthumbnail_20230220_162027.jpg?alt=media&token=dc64a515-bda2-4790-aa99-941f302e7eee";
+        FirebaseStorage mStorage = FirebaseStorage.getInstance();
+        StorageReference storageRef = mStorage.getReference(imgPath);
+        storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(context)
+                        .load(uri)
+                        .fitCenter()
+                        .thumbnail(Glide.with(context).load(R.drawable.loading_image))
+                        .error(R.drawable.profile_icon)
+                        .into(profilePicture);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Glide.with(context)
+                        .load(R.drawable.no_image_found)
+                        .fitCenter()
+                        .into(profilePicture);
+            }
+        });
     }
 
 }
