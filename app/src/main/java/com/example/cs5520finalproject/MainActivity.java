@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -385,6 +386,29 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
+        storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/chen.yime@test.com").getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    String downUrl = task.getResult().getPath();
+                    Log.d("main activity/onUploadButtonPressed", "onComplete: download url = " + downUrl);
+                    currentUserLocalType.setProfilePicture(downUrl);
+                }
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    currentUserLocalType.setProfilePicture(downloadUri.getPath());
+                    updateInfo(Tags.USERS_PROFILE_PICTURE, downloadUri.getPath());
+                    Log.d("on upload button pressed", "onComplete: " + currentUserLocalType.getProfilePicture());
+                    switchToProfilePageFragment();
+                } else {
+                    Log.d("onComplete storage reference", "fail");
+                }
+            }
+        });
     }
 
     @Override
