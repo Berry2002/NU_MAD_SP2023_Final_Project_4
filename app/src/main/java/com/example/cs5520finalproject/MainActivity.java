@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
     public MainActivity() {
         this.mAuth = FirebaseAuth.getInstance();
         this.db = FirebaseFirestore.getInstance();
-        this.storage = FirebaseStorage.getInstance(); // getting the instance of FirebaseStorage
+        this.storage = FirebaseStorage.getInstance(); // getting the instance of FirebaseStorage....
         this.currentUser = this.mAuth.getCurrentUser();
     }
 
@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity
     public void equipPath(Path path) {
         // can only start path if they have no current path
         if (currentUserLocalType.getCurrentPathID() == null) {
+
             this.updateInfo(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
             this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
             currentUserLocalType.setCurrentPathID(path.getPathID());
@@ -169,104 +170,16 @@ public class MainActivity extends AppCompatActivity
         this.replaceFragment(new FragmentSearchPage(currentUserLocalType));
         this.populateScreen();
     }
-
     @Override
+
     public void goToPathReviews(Path path) {
         replaceFragment(new FragmentPathReviewsPage(currentUserLocalType, path));
     }
 
-    @Override
     public void changeProfilePicture() {
         this.imageLocation = Tags.FIREBASE_STORAGE_PROFILE_PICTURE;
         binding.bottomNavView.setVisibility(View.GONE);
         checkForCameraPermission();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length > 2) {
-            binding.bottomNavView.setVisibility(View.GONE);
-            replaceFragment(FragmentCameraController.newInstance());
-        } else {
-            Toast.makeText(this, "You must allow Camera and Storage permissions!", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onTakePhoto(Uri imageUri) {
-        replaceFragment(FragmentDisplayImage.newInstance(imageUri));
-    }
-
-    @Override
-    public void onOpenGalleryPressed() {
-        openGallery();
-    }
-
-    @Override
-    public void onRetakePressed() {
-        replaceFragment(new FragmentCameraController());
-    }
-
-    @Override
-    public void onUploadButtonPressed(Uri imageUri) {
-        // Upload an image from local file
-        StorageReference storageReference = storage.getReference()
-                .child(Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + this.imageLocation);
-
-        UploadTask uploadImage = storageReference.putFile(imageUri);
-
-        uploadImage.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "Upload Failed! Try again!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-    }
-
-    @Override
-    public void addPictureToTravelLog(String questName) {
-        this.imageLocation =  "/" + Tags.FIREBASE_STORAGE_TRAVEL_LOG + questName + ".jpg";
-        binding.bottomNavView.setVisibility(View.GONE);
-
-        // add it to the local user if it doesn't already exist
-        if (!this.currentUserLocalType.getTravelLog().contains(this.imageLocation)) {
-            this.currentUserLocalType.getTravelLog().add(this.imageLocation);
-        }
-
-        // update on Firebase
-        this.updateInfo(Tags.USERS_TRAVEL_LOG, this.currentUserLocalType.getTravelLog());
-    }
-
-    @Override
-    public void completeQuest(String questName, int questIndex, int expValue) {
-        this.currentUserLocalType.addExp(expValue);
-        this.updateInfo(Tags.USERS_EXP, this.currentUserLocalType.getExp());
-        updateQuestsCompleted(questName); // update user quests completed (local & database)
-
-        this.db.collection(Tags.PATHS).document(this.currentUserLocalType.getCurrentPathID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    Path currentPath = task.getResult().toObject(Path.class);
-
-                    // if there are no more quests in the path - set the path to completed
-                    if (currentPath.getNumQuests() == currentUserLocalType.getCompletedQuests().size()) {
-                        // finished all quests - make the current path stuff empty
-                        updatePathsCompleted(currentPath.getPathID());
-                        updateQuestsCompleted(""); // starting a new path, make quests completed empty
-                    }
-                }
-            }
-        });
     }
 
     /**
@@ -285,7 +198,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * go to quest home page fragment to see all quests left
+     * Go to quest home page fragment to see all quests left.
      */
     private void switchToHomePageFragment() {
         String email = this.currentUser.getEmail();
@@ -296,7 +209,8 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                     if (error == null) {
-                        currentUserLocalType = value.toObject(User.class); // current user retrieved
+                        currentUserLocalType = value.toObject(User.class);
+                        // current user retrieved
                         replaceFragment(new FragmentQuestHomePage(currentUserLocalType));
                     } else {
                         Log.e("main activity", "onEvent: could not retrieve the current user from Firestore");
@@ -347,7 +261,7 @@ public class MainActivity extends AppCompatActivity
      * @param field key in Firebase
      * @param info value in Firebase
      */
-    private void updateInfo(String field, Object info) {
+    private void updateInfo(String field, String info) {
         this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
                 .update(field, info)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -373,8 +287,91 @@ public class MainActivity extends AppCompatActivity
             questsCompleted.add(questName);
         }
 
-        this.updateInfo(Tags.USERS_COMPLETED_QUESTS, questsCompleted);
-        currentUserLocalType.setCompletedQuests(questsCompleted);
+        this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
+                .update(Tags.USERS_COMPLETED_QUESTS, questsCompleted)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e("update quests completed", "onComplete: could not update the quests completed");
+                        } else {
+                            currentUserLocalType.setCompletedQuests(questsCompleted);
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(grantResults.length > 2) {
+            binding.bottomNavView.setVisibility(View.GONE);
+            replaceFragment(FragmentCameraController.newInstance());
+        } else {
+            Toast.makeText(this, "You must allow Camera and Storage permissions!", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onTakePhoto(Uri imageUri) {
+        Log.d("onTakePhoto", "here");
+        replaceFragment(FragmentDisplayImage.newInstance(imageUri));
+    }
+
+    @Override
+    public void onOpenGalleryPressed() {
+        openGallery();
+    }
+
+    @Override
+    public void onRetakePressed() {
+        replaceFragment(new FragmentCameraController());
+    }
+
+    @Override
+    public void onUploadButtonPressed(Uri imageUri) {
+        // Upload an image from local file....
+        StorageReference storageReference = storage.getReference()
+                .child(Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + this.imageLocation);
+
+        UploadTask uploadImage = storageReference.putFile(imageUri);
+
+        uploadImage.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MainActivity.this, "Upload Failed! Try again!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+    }
+
+    @Override
+    public void addPictureToTravelLog(String questName) {
+        this.imageLocation =  "/" + Tags.FIREBASE_STORAGE_TRAVEL_LOG + questName + ".jpg";
+        binding.bottomNavView.setVisibility(View.GONE);
+
+        this.currentUserLocalType.getTravelLog().add(this.imageLocation); // add it to the local user
+
+        // update on Firebase
+        this.db.collection(Tags.USERS).document(this.currentUserLocalType.getEmail())
+                .update(Tags.USERS_TRAVEL_LOG, this.currentUserLocalType.getTravelLog())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            checkForCameraPermission();
+                        } else {
+                            Log.e("main activity", "add picture to travel log failed");
+                        }
+                    }
+                });
+
     }
 
     /**
@@ -415,6 +412,51 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
+     * Update the user's exp with the given exp added.
+     * @param exp exp to be added
+     */
+    private void updateExp(int exp) {
+        int newExp = currentUserLocalType.getExp() + exp;
+        this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
+                .update(Tags.USERS_EXP, newExp)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e("updateExp", "onComplete: could not update exp");
+                        } else {
+                            currentUserLocalType.addExp(exp); // update local user exp
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void completeQuest(String questName, int questIndex, int expValue) {
+        updateExp(expValue); // update user exp (local & database)
+        updateQuestsCompleted(questName); // update user quests completed (local & database)
+        this.db.collection(Tags.PATHS)
+                .document(this.currentUserLocalType.getCurrentPathID())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Path currentPath = task.getResult().toObject(Path.class);
+
+                    // if there are no more quests in the path - set the path to completed
+                    if (currentPath.getNumQuests() == currentUserLocalType.getCompletedQuests().size()) {
+                        // finished all quests - make the current path stuff empty
+                        currentUserLocalType.completedPath(currentPath.getPathID());
+                        updatePathsCompleted(currentPath.getPathID());
+                        updateQuestsCompleted(""); // starting a new path, make quests completed empty
+                    }
+                }
+            }
+        });
+    }
+
+    /**
      * Update the corresponding data when the user completes a path.
      * @param pathID the path id a user has completed
      */
@@ -422,14 +464,17 @@ public class MainActivity extends AppCompatActivity
         ArrayList<String> pathsCompleted = this.currentUserLocalType.getCompletedPaths();
         pathsCompleted.add(pathID);
 
-        // changing on the database
-        this.updateInfo(Tags.USERS_COMPLETED_PATHS, pathsCompleted);
-        this.updateInfo(Tags.USERS_CURRENT_PATH_ID, null);
-        this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, null);
-        this.updateInfo(Tags.USERS_COMPLETED_QUESTS, new ArrayList<String>());
-
-        // changing locally
-        currentUserLocalType.setCompletedPaths(pathsCompleted);
-        currentUserLocalType.completedPath(pathID);
+        this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
+                .update(Tags.USERS_COMPLETED_QUESTS, pathsCompleted)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e("update quests completed", "onComplete: could not update the quests completed");
+                        } else {
+                            currentUserLocalType.setCompletedPaths(pathsCompleted);
+                        }
+                    }
+                });
     }
 }
