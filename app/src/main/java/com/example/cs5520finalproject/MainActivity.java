@@ -264,10 +264,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateQuestsCompleted(String questName) {
-        ArrayList<String> questsCompleted = this.currentUserLocalType.getCompletedQuests();
-        questsCompleted.add(questName);
+        ArrayList<String> questsCompleted;
         if (questName.equals("")) { // if starting a new path, set completed quests to empty list
             questsCompleted = new ArrayList<>();
+        } else {
+            questsCompleted = this.currentUserLocalType.getCompletedQuests();
+            questsCompleted.add(questName);
         }
 
         this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
@@ -278,11 +280,10 @@ public class MainActivity extends AppCompatActivity
                         if (!task.isSuccessful()) {
                             Log.e("update quests completed", "onComplete: could not update the quests completed");
                         } else {
-//                            currentUserLocalType.setCompletedQuests(questsCompleted);
+                            currentUserLocalType.setCompletedQuests(questsCompleted);
                         }
                     }
                 });
-        this.currentUserLocalType.setCompletedQuests(questsCompleted);
     }
 
     private void checkForCameraPermission() {
@@ -431,9 +432,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void completeQuest(String questName, int questIndex, int expValue) {
-
-        this.currentUserLocalType.addExp(expValue);
-        this.currentUserLocalType.getCompletedQuests().add(questName);
+//        this.currentUserLocalType.addExp(expValue);
+//        this.currentUserLocalType.getCompletedQuests().add(questName);
         updateExp(expValue); // update user exp (local & database)
         updateQuestsCompleted(questName); // update user quests completed (local & database)
         this.db.collection(Tags.PATHS).document(this.currentUserLocalType.getCurrentPathID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -468,10 +468,9 @@ public class MainActivity extends AppCompatActivity
                         if (!task.isSuccessful()) {
                             Log.e("update quests completed", "onComplete: could not update the quests completed");
                         } else {
-//                            currentUserLocalType.setCompletedQuests(questsCompleted);
+                            currentUserLocalType.setCompletedPaths(pathsCompleted);
                         }
                     }
                 });
-        this.currentUserLocalType.setCompletedPaths(pathsCompleted);
     }
 }

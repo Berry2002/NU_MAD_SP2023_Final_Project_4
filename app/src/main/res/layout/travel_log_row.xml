@@ -7,8 +7,10 @@
 
     <ImageView
         android:id="@+id/travelLog_imageView"
-        android:layout_width="168dp"
-        android:layout_height="179dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

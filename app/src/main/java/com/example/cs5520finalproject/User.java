@@ -143,7 +143,7 @@ public class User {
         this.getCompletedPaths().add(pathID);
         this.setCurrentPathID(null);
         this.setCurrentPathName(null);
-        this.setCompletedQuests(new ArrayList<>());
+        this.setCompletedQuests(new ArrayList<String>());
     }
 
     @Override
