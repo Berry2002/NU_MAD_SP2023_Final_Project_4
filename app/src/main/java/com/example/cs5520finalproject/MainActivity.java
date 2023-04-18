@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
     private User currentUserLocalType;
 
     // from search paths page to path highlight page
-    //Retrieving an image from gallery....
+    // Retrieving an image from gallery....
     private ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
