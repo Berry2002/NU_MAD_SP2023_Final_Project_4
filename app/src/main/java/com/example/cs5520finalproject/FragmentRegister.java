@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +25,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Register screen.
+ */
 public class FragmentRegister extends Fragment {
 
     private EditText displayName, email, password, confirmPassword;
@@ -72,7 +77,7 @@ public class FragmentRegister extends Fragment {
                 if (canRegister()) {
                     tryRegister();
                     mUserLocalType = new User(retrieveText(displayName), retrieveText(email), retrieveText(password));
-                    addUserToFirebase(mUserLocalType);
+                    addUserToFirebase();
                 }
             }
         });
@@ -80,6 +85,10 @@ public class FragmentRegister extends Fragment {
         return view;
     }
 
+    /**
+     * Can the user register - are all the fields filled in to make an attempt to register?
+     * @return true - can register, false - cannot
+     */
     private boolean canRegister() {
         boolean retVal = true;
 
@@ -103,6 +112,10 @@ public class FragmentRegister extends Fragment {
         return retVal;
     }
 
+    /**
+     * Makes the call to Firebase Authentication to try to register the user,
+     * assuming that the user has all the necessary information to register.
+     */
     private void tryRegister() {
         // assume we can register - all fields validated
         // create user now!
@@ -132,23 +145,32 @@ public class FragmentRegister extends Fragment {
                 });
     }
 
-    private void addUserToFirebase(User user) {
+    /**
+     * After adding the user to the Firebase Authentication, add them to the Firebase database.
+     */
+    private void addUserToFirebase() {
         HashMap<String, Object> userHash = new HashMap<>();
-        userHash.put(Tags.USERS_DISPLAY_NAME, user.getDisplayName());
-        userHash.put(Tags.USERS_EMAIL, user.getEmail());
-        userHash.put(Tags.USERS_PASSWORD, user.getPassword());
-        userHash.put(Tags.USERS_EXP, user.getExp());
-        userHash.put(Tags.USERS_COMPLETED_PATHS, user.getCompletedPaths());
-        userHash.put(Tags.USERS_COMPLETED_QUESTS, user.getCompletedQuests());
-        userHash.put(Tags.USERS_CURRENT_PATH_ID, user.getCurrentPathID());
-        userHash.put(Tags.USERS_CURRENT_PATH_NAME, user.getCurrentPathName());
-        userHash.put(Tags.USERS_PROFILE_PICTURE, user.getProfilePicture());
-        userHash.put(Tags.USERS_TRAVEL_LOG, user.getTravelLog());
-        userHash.put(Tags.USERS_START_DATE, user.getStartDate());
+        userHash.put(Tags.USERS_DISPLAY_NAME, mUserLocalType.getDisplayName());
+        userHash.put(Tags.USERS_EMAIL, mUserLocalType.getEmail());
+        userHash.put(Tags.USERS_PASSWORD, mUserLocalType.getPassword());
+        userHash.put(Tags.USERS_EXP, mUserLocalType.getExp());
+        userHash.put(Tags.USERS_COMPLETED_PATHS, mUserLocalType.getCompletedPaths());
+        userHash.put(Tags.USERS_COMPLETED_QUESTS, mUserLocalType.getCompletedQuests());
+        userHash.put(Tags.USERS_CURRENT_PATH_ID, mUserLocalType.getCurrentPathID());
+        userHash.put(Tags.USERS_CURRENT_PATH_NAME, mUserLocalType.getCurrentPathName());
+        userHash.put(Tags.USERS_PROFILE_PICTURE, mUserLocalType.getProfilePicture());
+        userHash.put(Tags.USERS_TRAVEL_LOG, mUserLocalType.getTravelLog());
+        userHash.put(Tags.USERS_START_DATE, mUserLocalType.getStartDate());
 
         this.db.collection(Tags.USERS)
-                .document(user.getEmail())
-                .set(userHash);
+                .document(mUserLocalType.getEmail())
+                .set(userHash)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Register Fragment", "onFailure: " + e.getMessage());
+                    }
+                });
     }
 
     private String retrieveText(EditText editText) {

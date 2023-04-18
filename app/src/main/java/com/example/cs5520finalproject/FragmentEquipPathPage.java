@@ -17,6 +17,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * Displays more information about the path for the user to equip it.
+ */
 public class FragmentEquipPathPage extends Fragment {
 
     private TextView textViewEquipPathName, textViewEquipPathDescription;

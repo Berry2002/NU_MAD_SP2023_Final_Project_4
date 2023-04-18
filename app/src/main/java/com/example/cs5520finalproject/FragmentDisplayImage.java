@@ -17,9 +17,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentDisplayImage#newInstance} factory method to
- * create an instance of this fragment.
+ * Displays the image taken or uploaded.
  */
 public class FragmentDisplayImage extends Fragment {
 

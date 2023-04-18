@@ -28,6 +28,9 @@ import java.util.Collections;
 import java.util.Comparator;
 
 
+/**
+ * Displays all the reviews for a specific path.
+ */
 public class FragmentPathReviewsPage extends Fragment {
 
     private FirebaseFirestore db;
@@ -47,13 +50,10 @@ public class FragmentPathReviewsPage extends Fragment {
         // Required empty public constructor
     }
 
-
-
     public FragmentPathReviewsPage(User user, Path path) {
         this.currentUser = user;
         this.selectedPath = path;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,13 +87,10 @@ public class FragmentPathReviewsPage extends Fragment {
             public void onClick(View view) {
                 String reviewTitle = editTextReviewTitle.getText().toString().trim();
                 String reviewComment = editTextReviewComment.getText().toString().trim();
-                if( !reviewTitle.equals("") && !reviewComment.equals("")){
+                if (!reviewTitle.equals("") && !reviewComment.equals("")){
                     Review review = new Review(currentUser.getEmail(), reviewTitle, reviewComment);
-
                     uploadReviewToFirebase(review);
-
-
-                }else{
+                } else {
                     if( !reviewTitle.equals("")) {
                         editTextReviewTitle.setError("Can't be empty!");
                     }
@@ -109,6 +106,10 @@ public class FragmentPathReviewsPage extends Fragment {
         return view;
     }
 
+    /**
+     * Add a given review to Firebase.
+     * @param review the review to be added
+     */
     private void uploadReviewToFirebase(Review review) {
         db.collection(Tags.PATHS)
                 .document(this.selectedPath.getPathID())

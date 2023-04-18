@@ -27,21 +27,19 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * Screen for looking at all the paths you haven't completed.
+ * Also is the location for the user to either equip or leave a path.
+ */
 public class FragmentSearchPage extends Fragment {
+
     private RecyclerView search_page_recycler_view;
-
     private TextView search_page_current_path;
-
     private Button leave_path_button;
-
-
     private ArrayList<Path> mPaths; // all incomplete paths for currentLocalUser
-
     private FirebaseFirestore db;
     private User currentLocalUser;
-
     private PathsAdapter pathsAdapter;
-
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
     private IFragmentToMainActivity mListener;
 
@@ -59,9 +57,6 @@ public class FragmentSearchPage extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
 
@@ -102,18 +97,30 @@ public class FragmentSearchPage extends Fragment {
         Log.d("search page, user", currentLocalUser.getDisplayName());
 
         // get paths left for the current User
-        fetchCurrentPathsLeft(currentLocalUser);
+        fetchCurrentPathsLeft();
 
         return view;
     }
 
 
-    // get paths left for the current user
-    private void fetchCurrentPathsLeft(User user) {
-        Log.d("search page", "fetchCurrentPathsLeft: user == null " + (user == null));
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof IFragmentToMainActivity) {
+            this.mListener = (IFragmentToMainActivity) context;
+        } else{
+            throw new RuntimeException(context + " must implement IFragmentToMainActivity");
+        }
+    }
+
+    /**
+     * Retrieve all the paths left for the current user.
+     */
+    private void fetchCurrentPathsLeft() {
+
         mPaths.clear();
-        ArrayList<String> completedPaths = user.getCompletedPaths(); // user's completed paths
-        Log.d("search page", "fetchCurrentPathsLeft: user's completed paths == null " + (user.getCompletedPaths() == null));
+        ArrayList<String> completedPaths = currentLocalUser.getCompletedPaths(); // user's completed paths
+
         // get all paths in Firebase
         db.collection(Tags.PATHS)
                 .get()
@@ -127,8 +134,8 @@ public class FragmentSearchPage extends Fragment {
                                 // if user has neither completed the path nor on current path
 
                                 if (!completedPaths.contains(path.getPathID())
-                                        && (user.getCurrentPathID() == null
-                                        || !user.getCurrentPathID().equals(path.getPathID()))) {
+                                        && (currentLocalUser.getCurrentPathID() == null
+                                        || !currentLocalUser.getCurrentPathID().equals(path.getPathID()))) {
 
                                     mPaths.add(path);
                                 }
@@ -138,15 +145,5 @@ public class FragmentSearchPage extends Fragment {
                         }
                     }
                 });
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof IFragmentToMainActivity) {
-            this.mListener = (IFragmentToMainActivity) context;
-        } else{
-            throw new RuntimeException(context + " must implement IFragmentToMainActivity");
-        }
     }
 }

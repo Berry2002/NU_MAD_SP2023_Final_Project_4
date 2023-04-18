@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity
                         replaceFragment(new FragmentRankingsPage());
                         break;
                     case (R.id.fragmentReviewsHomePage):
-                        replaceFragment(new FragmentReviewsHomePage(currentUserLocalType));
+                        replaceFragment(new FragmentReviewsHomePage());
                         break;
                 }
                 return true;
