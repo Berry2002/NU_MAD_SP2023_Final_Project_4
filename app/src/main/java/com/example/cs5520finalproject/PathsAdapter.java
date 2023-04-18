@@ -79,6 +79,9 @@ public class PathsAdapter extends RecyclerView.Adapter<PathsAdapter.ViewHolder> 
 
         Glide.with(this.context)
                 .load(Uri.parse(currentPath.getImage()))
+                .fitCenter()
+                .thumbnail(Glide.with(context).load(R.drawable.loading_image))
+                .error(R.drawable.no_image_found)
                 .into(holder.imageViewPath);
 
         holder.textViewPathLocation.setText(currentPath.getLocation());

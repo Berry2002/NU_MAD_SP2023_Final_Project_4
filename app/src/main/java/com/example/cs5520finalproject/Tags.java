@@ -31,5 +31,7 @@ public class Tags {
 
     public static final String REVIEWS = "reviews";
 
-    public static final String FIREBASE_STORAGE_BASE = "gs://quest-8f3ba.appspot.com/";
+    public static final String FIREBASE_STORAGE_BASE = "images/";
+    public static final String FIREBASE_STORAGE_PROFILE_PICTURE = "/profile.jpg";
+    public static final String FIREBASE_STORAGE_TRAVEL_LOG = "travelLog/";
 }
