@@ -24,10 +24,12 @@ import java.util.Comparator;
 
 import com.google.firebase.firestore.QuerySnapshot;
 
+/**
+ * Displays the user's rankings.
+ */
 public class FragmentRankingsPage extends Fragment {
     private RecyclerView recyclerViewRankings;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
-
     private RankingsAdapter rankingsAdapter;
     private ArrayList<User> mFriends; // all users in Firebase
     private FirebaseFirestore db;
@@ -41,9 +43,6 @@ public class FragmentRankingsPage extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null) {
-        }
     }
 
     @Override

@@ -21,24 +21,20 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-
+/**
+ * Displays all the paths to see reviews for.
+ */
 public class FragmentReviewsHomePage extends Fragment {
 
     private RecyclerView recyclerView_ReviewsHomePage;
     private ArrayList<Path> mPaths;
     private FirebaseFirestore db;
-    private User currentLocalUser;
     private PathReviewsAdapter pathReviewsAdapter;
     private RecyclerView.LayoutManager recyclerViewLayoutManager;
     private IFragmentToMainActivity mListener;
 
 
     public FragmentReviewsHomePage() {
-        // Required empty public constructor
-    }
-
-    public FragmentReviewsHomePage (User user) {
-        this.currentLocalUser = user;
         this.db = FirebaseFirestore.getInstance();
         this.mPaths = new ArrayList<>();
     }
@@ -64,6 +60,19 @@ public class FragmentReviewsHomePage extends Fragment {
         return view;
     }
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof IFragmentToMainActivity) {
+            this.mListener = (IFragmentToMainActivity) context;
+        } else{
+            throw new RuntimeException(context + " must implement IFragmentToMainActivity");
+        }
+    }
+
+    /**
+     * Retrieve from the database all the paths for which we need to display reviews for.
+     */
     private void fetchAllPaths() {
         mPaths.clear();
         db.collection(Tags.PATHS)
@@ -81,15 +90,5 @@ public class FragmentReviewsHomePage extends Fragment {
                         }
                     }
                 });
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof IFragmentToMainActivity) {
-            this.mListener = (IFragmentToMainActivity) context;
-        } else{
-            throw new RuntimeException(context + " must implement IFragmentToMainActivity");
-        }
     }
 }

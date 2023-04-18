@@ -26,7 +26,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-// shows us the current quests that are not done yet
+/**
+ * Shows us the current unfinished quests.
+ */
 public class FragmentQuestHomePage extends Fragment {
 
     private User currUserLocalType;
@@ -43,11 +45,9 @@ public class FragmentQuestHomePage extends Fragment {
 
     public FragmentQuestHomePage(User currUser) {
         this.currUserLocalType = currUser;
-//        Log.d("quest home page current user: ", currUserLocalType.getDisplayName());
         Log.d("quest home page", "FragmentQuestHomePage: user all details = " + currUserLocalType.toString());
         this.db = FirebaseFirestore.getInstance();
         this.questsLeftToDo = new ArrayList<Quest>();
-        // extract the list of quests we need to display by going through the database
     }
 
     @Override
@@ -72,11 +72,15 @@ public class FragmentQuestHomePage extends Fragment {
         this.questRecyclerView.setLayoutManager(this.questLayoutManager);
         this.questRecyclerView.setAdapter(this.questAdapter);
         Log.d("quest home page", "onCreateView: after setting the adapter");
+        // extract the list of quests we need to display by going through the database
         this.extractQuestsLeft();
 
         return view;
     }
 
+    /**
+     * Loads all the user's unfinished quests from the database that we are going to display.
+     */
     private void extractQuestsLeft() {
         if (this.currUserLocalType.getCurrentPathID() == null) {
             this.equipPathMessage.setVisibility(View.VISIBLE);
@@ -90,7 +94,6 @@ public class FragmentQuestHomePage extends Fragment {
                                 questsLeftToDo.clear();
                                 for (DocumentSnapshot documentSnapshot : task.getResult()) {
                                     Quest currQuest = documentSnapshot.toObject(Quest.class);
-                                    Log.d("quest home page", "onComplete: current quest = " + currQuest);
                                     if (!currUserLocalType.getCompletedQuests().contains(currQuest.getName())) {
                                         questsLeftToDo.add(currQuest);
                                     }

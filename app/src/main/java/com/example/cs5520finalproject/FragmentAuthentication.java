@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 /**
- * Fragment that deals with 
+ * Prompts the user to login or register.
+ * Populates when there is no user logged in.
  */
 public class FragmentAuthentication extends Fragment {
 

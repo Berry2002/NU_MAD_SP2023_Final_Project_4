@@ -20,6 +20,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * Login screen.
+ */
 public class FragmentLogin extends Fragment {
 
     private EditText email, password;
@@ -69,6 +72,10 @@ public class FragmentLogin extends Fragment {
         }
     }
 
+    /**
+     * Can the user login - are all the fields filled in to make an attempt to login?
+     * @return true - can attempt to login, false - can't attempt to login
+     */
     private boolean canLogin() {
         String emailContents = this.email.getText().toString().trim();
         String passwordContents = this.password.getText().toString().trim();
@@ -86,6 +93,10 @@ public class FragmentLogin extends Fragment {
         return true;
     }
 
+    /**
+     * Makes the call to Firebase Authentication to try to log the user in,
+     * assuming that the user has all the necessary information to log in.
+     */
     private void tryLogin() {
         String emailContents = this.email.getText().toString().trim();
         String passwordContents = this.password.getText().toString().trim();

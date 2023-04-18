@@ -41,6 +41,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+/**
+ * Displays information about the user's profile - including their travel log.
+ */
 public class FragmentProfilePage extends Fragment {
 
     private FirebaseAuth mAuth;
@@ -108,6 +111,7 @@ public class FragmentProfilePage extends Fragment {
         this.exp = view.findViewById(R.id.exp_inProfilePage);
         this.questingSince = view.findViewById(R.id.questingSince_inProfilePage);
         this.logOutButton = view.findViewById(R.id.logoutButton_profilePage);
+        this.travelLogRecycler = view.findViewById(R.id.travelLogRecyclerView);
 
         this.profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,19 +128,16 @@ public class FragmentProfilePage extends Fragment {
             }
         });
 
-        this.travelLogRecycler = view.findViewById(R.id.travelLogRecyclerView);
-        this.travelLogAdapter = new TravelLogAdapter(this.currentUserLocalType.getTravelLog(),
-                this.getContext(), this.currentUserLocalType.getEmail());
-        this.travelLayoutManager = new GridLayoutManager(this.getContext(), 2);
-        this.travelLogRecycler.setLayoutManager(travelLayoutManager);
-        this.travelLogRecycler.setAdapter(this.travelLogAdapter);
-        this.travelLogAdapter.notifyDataSetChanged();
-
+        this.refreshProfilePicture();
         this.refreshUserData();
+        this.refreshTravelLog();
 
         return view;
     }
 
+    /**
+     * Reloads the user's data to display.
+     */
     private void refreshUserData() {
         // call the method to fetch the data
         if (this.currentUserLocalType != null) {
@@ -152,9 +153,11 @@ public class FragmentProfilePage extends Fragment {
             this.questingSince.setText(String.format("Questing since: %s %s, %s",
                     localDate.getDayOfMonth(), localDate.getMonth(), localDate.getYear()));
         }
-        refreshProfilePicture();
     }
 
+    /**
+     * Reloads the user's profile picture.
+     */
     private void refreshProfilePicture() {
         String imgPath = Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + Tags.FIREBASE_STORAGE_PROFILE_PICTURE;
         FirebaseStorage mStorage = FirebaseStorage.getInstance();
@@ -179,6 +182,18 @@ public class FragmentProfilePage extends Fragment {
                         .into(profilePicture);
             }
         });
+    }
+
+    /**
+     * Reloads the user's travel log.
+     */
+    private void refreshTravelLog() {
+        this.travelLogAdapter = new TravelLogAdapter(this.currentUserLocalType.getTravelLog(),
+                this.getContext(), this.currentUserLocalType.getEmail());
+        this.travelLayoutManager = new GridLayoutManager(this.getContext(), 2);
+        this.travelLogRecycler.setLayoutManager(travelLayoutManager);
+        this.travelLogRecycler.setAdapter(this.travelLogAdapter);
+        this.travelLogAdapter.notifyDataSetChanged();
     }
 
 }

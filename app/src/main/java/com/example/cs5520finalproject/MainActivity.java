@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity
                         replaceFragment(new FragmentRankingsPage());
                         break;
                     case (R.id.fragmentReviewsHomePage):
-                        replaceFragment(new FragmentReviewsHomePage(currentUserLocalType));
+                        replaceFragment(new FragmentReviewsHomePage());
                         break;
                 }
                 return true;
@@ -328,6 +328,11 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
+    /**
+     *
+     * @param field
+     * @param info
+     */
     private void updateInfo(String field, Object info) {
         this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
                 .update(field, info)

@@ -30,9 +30,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.ExecutionException;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link FragmentCameraController#newInstance} factory method to
- * create an instance of this fragment.
+ * Prompts the camera functionalities - taking or uploading a picture.
  */
 public class FragmentCameraController extends Fragment implements View.OnClickListener {
 
