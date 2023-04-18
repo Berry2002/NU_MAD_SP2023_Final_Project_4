@@ -157,7 +157,6 @@ public class FragmentProfilePage extends Fragment {
 
     private void refreshProfilePicture() {
         String imgPath = Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + Tags.FIREBASE_STORAGE_PROFILE_PICTURE;
-//        imgPath = "https://firebasestorage.googleapis.com/v0/b/quest-8f3ba.appspot.com/o/images%2Fsanjana%40gmail.com%2Fthumbnail_20230220_162027.jpg?alt=media&token=dc64a515-bda2-4790-aa99-941f302e7eee";
         FirebaseStorage mStorage = FirebaseStorage.getInstance();
         StorageReference storageRef = mStorage.getReference(imgPath);
         storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -165,7 +164,7 @@ public class FragmentProfilePage extends Fragment {
             public void onSuccess(Uri uri) {
                 Glide.with(context)
                         .load(uri)
-                        .fitCenter()
+                        .centerCrop()
                         .thumbnail(Glide.with(context).load(R.drawable.loading_image))
                         .error(R.drawable.profile_icon)
                         .into(profilePicture);

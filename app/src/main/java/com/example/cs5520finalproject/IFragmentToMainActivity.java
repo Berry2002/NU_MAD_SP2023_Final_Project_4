@@ -15,4 +15,5 @@ public interface IFragmentToMainActivity {
     void changeProfilePicture();
     void addPictureToTravelLog(String questName);
     void completeQuest(String questName, int questIndex, int expValue);
+
 }
