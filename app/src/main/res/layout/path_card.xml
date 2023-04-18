@@ -7,7 +7,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
         android:layout_margin="20dp"
         app:cardBackgroundColor="@color/quest_gold"
         app:contentPadding="8dp"
@@ -18,7 +18,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/white">
 
             <ImageView
@@ -63,7 +63,7 @@
                 android:layout_marginEnd="8dp"
                 android:ellipsize="marquee"
                 android:fontFamily="@font/bergen_sans_regular"
-                android:maxLines="10"
+                android:maxLines="8"
                 android:text="Description"
                 android:textColor="@color/quest_blue"
                 android:textSize="12sp"

@@ -42,11 +42,9 @@ public class FragmentProfilePage extends Fragment {
     private FirebaseFirestore db;
     private FirebaseUser currentUser;
     private User currentUserLocalType;
-    private EditText displayName;
-    private TextView currentPath, exp, questingSince;
+    private TextView currentPath, exp, questingSince, displayName;
     private ImageButton profilePicture, logOutButton;
     private IFragmentToMainActivity pathway;
-    // need: recycler view, adapter, grid layout manager
     private RecyclerView travelLogRecycler;
     private TravelLogAdapter travelLogAdapter;
     private RecyclerView.LayoutManager travelLayoutManager;

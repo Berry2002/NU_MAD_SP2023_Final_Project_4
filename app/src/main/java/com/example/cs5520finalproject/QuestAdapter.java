@@ -108,9 +108,11 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
         holder.getCompleteQuestButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // pathway.goToPathHighlights(quests.get(holder.getAdapterPosition()));
-
+                // add the exp from this quest into the user's exp
+                pathway.completeQuest(currentQuest.getName(), position, currentQuest.getExpValue());
+                // add the quest to the list of quests done
                 // must add the quest to the list of quests done
+                pathway.addPictureToTravelLog(currentQuest.getName());
             }
         });
     }

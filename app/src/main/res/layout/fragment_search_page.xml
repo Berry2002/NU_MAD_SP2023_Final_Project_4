@@ -33,12 +33,15 @@
 
             <TextView
                 android:id="@+id/search_page_current_path"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:layout_marginEnd="4dp"
                 android:fontFamily="@font/bergen_sans_bold"
+                android:maxLines="3"
                 android:text="Current Path: "
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/leave_path_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

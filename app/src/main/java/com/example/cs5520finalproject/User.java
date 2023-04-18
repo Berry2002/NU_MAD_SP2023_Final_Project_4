@@ -134,4 +134,32 @@ public class User {
     public void setCurrentPathName(String currentPathName) {
         this.currentPathName = currentPathName;
     }
+
+    public void addExp(int expAddition) {
+        this.exp += expAddition;
+    }
+
+    public void completedPath(String pathID) {
+        this.getCompletedPaths().add(pathID);
+        this.setCurrentPathID(null);
+        this.setCurrentPathName(null);
+        this.setCompletedQuests(new ArrayList<>());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", profilePicture='" + profilePicture + '\'' +
+                ", travelLog=" + travelLog +
+                ", startDate=" + startDate +
+                ", exp=" + exp +
+                ", currentPathID='" + currentPathID + '\'' +
+                ", currentPathName='" + currentPathName + '\'' +
+                ", completedPaths=" + completedPaths +
+                ", completedQuests=" + completedQuests +
+                '}';
+    }
 }

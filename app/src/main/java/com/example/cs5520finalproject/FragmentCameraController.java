@@ -142,7 +142,7 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.buttonTakePhoto:
                 takePhoto();
                 break;
@@ -162,7 +162,7 @@ public class FragmentCameraController extends Fragment implements View.OnClickLi
         }
     }
 
-    public interface DisplayTakenPhoto{
+    public interface DisplayTakenPhoto {
         void onTakePhoto(Uri imageUri);
         void onOpenGalleryPressed();
     }
