@@ -125,8 +125,7 @@ public class MainActivity extends AppCompatActivity
             this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
             currentUserLocalType.setCurrentPathID(path.getPathID());
             currentUserLocalType.setCurrentPathName(path.getPathName());
-
-            this.updateQuestsCompleted();
+            this.updateQuestsCompleted("");
             this.populateScreen();
         } else {
             Toast.makeText(this,
@@ -258,25 +257,32 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
-                            Log.e("equip path", "onComplete: could not update the current path");
+                            Log.e(field, "onComplete: could not update field");
                         }
                     }
                 });
     }
 
-    private void updateQuestsCompleted() {
+    private void updateQuestsCompleted(String questName) {
+        ArrayList<String> questsCompleted = this.currentUserLocalType.getCompletedQuests();
+        questsCompleted.add(questName);
+        if (questName.equals("")) { // if starting a new path, set completed quests to empty list
+            questsCompleted = new ArrayList<>();
+        }
+
         this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
-                .update(Tags.USERS_COMPLETED_QUESTS, new ArrayList<String>())
+                .update(Tags.USERS_COMPLETED_QUESTS, questsCompleted)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
                             Log.e("update quests completed", "onComplete: could not update the quests completed");
                         } else {
-                            currentUserLocalType.setCompletedQuests(new ArrayList<String>());
+//                            currentUserLocalType.setCompletedQuests(questsCompleted);
                         }
                     }
                 });
+        this.currentUserLocalType.setCompletedQuests(questsCompleted);
     }
 
     private void checkForCameraPermission() {
@@ -417,11 +423,33 @@ public class MainActivity extends AppCompatActivity
         checkForCameraPermission();
     }
 
+    // update both database user & local user exp
+    private void updateExp(int exp) {
+        int newExp = currentUserLocalType.getExp() + exp;
+        this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
+                .update(Tags.USERS_EXP, newExp)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e("updateExp", "onComplete: could not update exp");
+                        } else {
+                            currentUserLocalType.addExp(exp); // update local user exp
+                        }
+                    }
+                });
+    }
+
     @Override
     public void completeQuest(String questName, int questIndex, int expValue) {
-        this.currentUserLocalType.addExp(expValue);
-        this.currentUserLocalType.getCompletedQuests().add(questName);
-        this.db.collection(Tags.PATHS).document(this.currentUserLocalType.getCurrentPathID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//        this.currentUserLocalType.addExp(expValue);
+//        this.currentUserLocalType.getCompletedQuests().add(questName);
+        updateExp(expValue); // update user exp (local & database)
+        updateQuestsCompleted(questName); // update user quests completed (local & database)
+        this.db.collection(Tags.PATHS)
+                .document(this.currentUserLocalType.getCurrentPathID())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -431,9 +459,30 @@ public class MainActivity extends AppCompatActivity
                     if (currentPath.getNumQuests() == currentUserLocalType.getCompletedQuests().size()) {
                         // finished all quests - make the current path stuff empty
                         currentUserLocalType.completedPath(currentPath.getPathID());
+                        updatePathsCompleted(currentPath.getPathID());
+                        updateQuestsCompleted(""); // starting a new path, make quests completed empty
                     }
                 }
             }
         });
+    }
+
+    private void updatePathsCompleted(String pathName) {
+        ArrayList<String> pathsCompleted = this.currentUserLocalType.getCompletedPaths();
+        pathsCompleted.add(pathName);
+
+        this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
+                .update(Tags.USERS_COMPLETED_QUESTS, pathsCompleted)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e("update quests completed", "onComplete: could not update the quests completed");
+                        } else {
+//                            currentUserLocalType.setCompletedQuests(questsCompleted);
+                        }
+                    }
+                });
+        this.currentUserLocalType.setCompletedPaths(pathsCompleted);
     }
 }
