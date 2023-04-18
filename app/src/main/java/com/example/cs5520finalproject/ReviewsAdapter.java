@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter that is responsible for displaying the Reviews Fragment.
+ */
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
 
     private IFragmentToMainActivity mListener;

@@ -14,11 +14,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+/**
+ * A RankingsAdapter responsible for displaying the Rankings Fragment.
+ */
 public class RankingsAdapter extends RecyclerView.Adapter<RankingsAdapter.ViewHolder> {
     private ArrayList<User> friends;
     private IFragmentToMainActivity mListener;
-
-    private Context context;
 
     public RankingsAdapter() {
 
@@ -33,9 +34,11 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingsAdapter.ViewHo
         }
     }
 
-    // sort friends based on EXP points before passing them to adapter
+    /**
+     * Sort the friends based on EXP points before passing them to adapter.
+     * @param users list of users
+     */
     private void sortFriendsBasedOnExp(ArrayList<User> users) {
-        Log.d("users in sort: ", users.toString());
         Collections.sort(users, new Comparator<User>() {
             @Override
             public int compare(User user1, User user2) {

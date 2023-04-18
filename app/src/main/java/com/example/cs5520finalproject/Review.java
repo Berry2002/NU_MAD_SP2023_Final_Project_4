@@ -1,8 +1,10 @@
 package com.example.cs5520finalproject;
 
-import java.sql.Time;
 import java.util.Date;
 
+/**
+ * A Reviews object that stores the data for a User's review to a Path.
+ */
 public class Review {
     private String reviewer, title, comment;
     private long time;

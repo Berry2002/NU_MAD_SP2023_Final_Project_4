@@ -2,6 +2,9 @@ package com.example.cs5520finalproject;
 
 import java.util.ArrayList;
 
+/**
+ * A Path object that represents a Path a User can complete.
+ */
 public class Path {
     private String location, subject, description, image, pathID, pathName;
     private ArrayList<Quest> quests;

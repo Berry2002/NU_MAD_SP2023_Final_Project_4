@@ -2,7 +2,6 @@ package com.example.cs5520finalproject;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+/**
+ * A TravelLogAdapter that is responsible for displaying the TravelLog photos.
+ */
 public class TravelLogAdapter extends RecyclerView.Adapter<TravelLogAdapter.ViewHolder> {
 
     ArrayList<String> images;
@@ -40,7 +42,6 @@ public class TravelLogAdapter extends RecyclerView.Adapter<TravelLogAdapter.View
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             this.travelLog = itemView.findViewById(R.id.travelLog_imageView);
         }
 
@@ -52,7 +53,6 @@ public class TravelLogAdapter extends RecyclerView.Adapter<TravelLogAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("PathsAdapter", "here");
         View itemRecyclerView = LayoutInflater
                 .from(parent.getContext())
                 .inflate(R.layout.travel_log_row, parent, false);
@@ -62,12 +62,7 @@ public class TravelLogAdapter extends RecyclerView.Adapter<TravelLogAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull TravelLogAdapter.ViewHolder holder, int position) {
-        String imgPath = currentUser + this.images.get(position);
-        imgPath = Tags.FIREBASE_STORAGE_BASE + this.currentUser /*+ "/"*/ + this.images.get(position);
-
-        Log.d("travel log adapter", "onBindViewHolder: current travel log " + imgPath);
-        Log.d("travel log adapter", "onBindViewHolder: holder.getTravelLog() == null is "
-                + (holder.getTravelLog() == null));
+        String imgPath = Tags.FIREBASE_STORAGE_BASE + this.currentUser + this.images.get(position);
 
         FirebaseStorage mStorage = FirebaseStorage.getInstance();
         StorageReference storageRef = mStorage.getReference().child(imgPath);

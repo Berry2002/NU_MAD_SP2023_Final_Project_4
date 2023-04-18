@@ -17,6 +17,9 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+/**
+ * A QuestAdapter that is responsible for displaying the Quest Homepage Fragment.
+ */
 public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> {
 
     private IFragmentToMainActivity pathway;
@@ -31,7 +34,6 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
 
     public QuestAdapter(ArrayList<Quest> quests, Context context) {
         this.quests = quests;
-
         if (context instanceof IFragmentToMainActivity){
             this.pathway = (IFragmentToMainActivity) context;
             this.context = context;
@@ -84,7 +86,6 @@ public class QuestAdapter extends RecyclerView.Adapter<QuestAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d("QuestAdapter", "here");
         View itemRecyclerView = LayoutInflater
                 .from(parent.getContext())
                     .inflate(R.layout.quest_card, parent, false);

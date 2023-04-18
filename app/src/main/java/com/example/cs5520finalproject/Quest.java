@@ -1,11 +1,13 @@
 package com.example.cs5520finalproject;
 
+/**
+ * A Quest object that represents a quest to be completed in a path.
+ */
 public class Quest {
     private String image, name, description, summary;
     private int expValue;
 
     public Quest() {
-
     }
 
     public Quest(String image, String name, String description, String summary, int expValue) {
