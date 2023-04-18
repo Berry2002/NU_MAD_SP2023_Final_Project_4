@@ -26,7 +26,7 @@ public class FragmentDisplayImage extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_URI = "imageUri";
-
+    private static final String ARG_LOCATION = "location";
     private Uri imageUri;
     private ImageView imageViewPhoto;
     private Button buttonRetake;
@@ -50,7 +50,7 @@ public class FragmentDisplayImage extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            imageUri = getArguments().getParcelable(ARG_URI);
+            this.imageUri = getArguments().getParcelable(ARG_URI);
             Log.d("display image", "onCreate");
         }
     }

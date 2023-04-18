@@ -17,11 +17,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,6 +43,7 @@ public class MainActivity extends AppCompatActivity
         FragmentCameraController.DisplayTakenPhoto,
         FragmentDisplayImage.RetakePhoto {
     private static final int PERMISSIONS_CODE = 0x100;
+    private String imageLocation;
     ActivityMainBinding binding;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -185,6 +184,7 @@ public class MainActivity extends AppCompatActivity
 
     public void changeProfilePicture() {
         binding.bottomNavView.setVisibility(View.GONE);
+        this.imageLocation = Tags.FIREBASE_STORAGE_PROFILE_PICTURE;
         checkForCameraPermission();
     }
 
@@ -340,7 +340,8 @@ public class MainActivity extends AppCompatActivity
     public void onUploadButtonPressed(Uri imageUri) {
         // Upload an image from local file....
         StorageReference storageReference = storage.getReference()
-                .child(Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + Tags.FIREBASE_STORAGE_PROFILE_PICTURE);
+                .child(Tags.FIREBASE_STORAGE_BASE + this.currentUser.getEmail() + this.imageLocation);
+
 //        storageReference = storage.getReferenceFromUrl("gs://quest-8f3ba.appspot.com/images/profile/" + currentUserLocalType.getEmail());
 
         UploadTask uploadImage = storageReference.putFile(imageUri);
@@ -419,6 +420,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void completeQuest(String questName, int questIndex, int expValue) {
+        this.imageLocation = Tags.FIREBASE_STORAGE_TRAVEL_LOG + "/" + questName + ".jpg";
         this.currentUserLocalType.addExp(expValue);
         this.currentUserLocalType.getCompletedQuests().add(questName);
         this.db.collection(Tags.PATHS).document(this.currentUserLocalType.getCurrentPathID()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
