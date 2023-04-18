@@ -1,6 +1,7 @@
 package com.example.cs5520finalproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -81,6 +82,8 @@ public class FragmentDisplayImage extends Fragment {
             @Override
             public void onClick(View view) {
                 mListener.onUploadButtonPressed(imageUri);
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
         return view;
