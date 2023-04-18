@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.cs5520finalproject.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -360,31 +361,20 @@ public class MainActivity extends AppCompatActivity
                     currentUserLocalType.setProfilePicture(downUrl);
                 }
             }
-        });
-        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
-            public void onSuccess(Uri uri) {
-                String imgPathName = uri.getPath();
-                Log.d("imageUri.getPath(): ", imgPathName);
-                currentUserLocalType.setProfilePicture(imgPathName);
-                updateInfo(Tags.USERS_PROFILE_PICTURE, imgPathName);
-                switchToProfilePageFragment();
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    currentUserLocalType.setProfilePicture(downloadUri.getPath());
+                    updateInfo(Tags.USERS_PROFILE_PICTURE, downloadUri.getPath());
+                    Log.d("on upload button pressed", "onComplete: " + currentUserLocalType.getProfilePicture());
+                    switchToProfilePageFragment();
+                } else {
+                    Log.d("onComplete storage reference", "fail");
+                }
             }
         });
-        uploadImage.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MainActivity.this, "Upload Failed! Try again!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(MainActivity.this, "Upload successful! Check Firestore", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
     }
 
     @Override
