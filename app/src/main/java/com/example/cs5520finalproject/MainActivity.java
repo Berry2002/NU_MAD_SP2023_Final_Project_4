@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainer;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -246,7 +245,6 @@ public class MainActivity extends AppCompatActivity
         this.updateInfo(Tags.USERS_TRAVEL_LOG, this.currentUserLocalType.getTravelLog());
     }
 
-<<<<<<< Updated upstream
     @Override
     public void completeQuest(String questName, int questIndex, int expValue) {
         this.currentUserLocalType.addExp(expValue);
@@ -328,9 +326,6 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();
-=======
-        binding.bottomNavView.setVisibility(View.VISIBLE);
->>>>>>> Stashed changes
     }
 
     /**
