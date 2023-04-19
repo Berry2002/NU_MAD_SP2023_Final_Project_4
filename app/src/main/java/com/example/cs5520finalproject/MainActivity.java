@@ -121,7 +121,6 @@ public class MainActivity extends AppCompatActivity
     public void equipPath(Path path) {
         // can only start path if they have no current path
         if (currentUserLocalType.getCurrentPathID() == null) {
-
             this.updateInfo(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
             this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
             currentUserLocalType.setCurrentPathID(path.getPathID());
@@ -148,6 +147,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void goToHomePage(FirebaseUser currentUser) {
         this.currentUser = currentUser;
+
         Log.d("current firebase user:", currentUser.getDisplayName());
         this.populateScreen();
     }
