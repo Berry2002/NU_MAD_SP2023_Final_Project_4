@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     private User currentUserLocalType; // local User object
 
     // from search paths page to path highlight page
-    //Retrieving an image from gallery....
+    // Retrieving an image from gallery....
     private ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void addPictureToTravelLog(String questName) {
         this.imageLocation =  "/" + Tags.FIREBASE_STORAGE_TRAVEL_LOG + questName + ".jpg";
-        binding.bottomNavView.setVisibility(View.GONE);
+//        binding.bottomNavView.setVisibility(View.GONE);
 
         this.currentUserLocalType.getTravelLog().add(this.imageLocation); // add it to the local user
 
