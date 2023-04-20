@@ -151,7 +151,9 @@ public class User {
      * @param pathID pathID of the completed path
      */
     public void completedPath(String pathID) {
-        this.getCompletedPaths().add(pathID);
+        ArrayList<String> newCompletedPaths = this.getCompletedPaths();
+        newCompletedPaths.add(pathID);
+        this.setCompletedPaths(newCompletedPaths);
         this.setCurrentPathID(null);
         this.setCurrentPathName(null);
         this.setCompletedQuests(new ArrayList<String>());

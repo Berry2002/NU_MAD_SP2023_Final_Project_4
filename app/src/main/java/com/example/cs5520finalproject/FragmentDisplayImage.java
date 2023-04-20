@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Displays the image taken or uploaded.
@@ -30,6 +31,7 @@ public class FragmentDisplayImage extends Fragment {
     private ImageView imageViewPhoto;
     private Button buttonRetake;
     private Button buttonUpload;
+    private IFragmentToMainActivity pathway;
     private RetakePhoto mListener;
 //    private ProgressBar progressBar;
 
@@ -82,8 +84,7 @@ public class FragmentDisplayImage extends Fragment {
             @Override
             public void onClick(View view) {
                 mListener.onUploadButtonPressed(imageUri);
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
+                pathway.goToHomePage(FirebaseAuth.getInstance().getCurrentUser());
             }
         });
         return view;
@@ -96,6 +97,12 @@ public class FragmentDisplayImage extends Fragment {
             mListener = (RetakePhoto) context;
         } else {
             throw new RuntimeException(context+" must implement RetakePhoto");
+        }
+
+        if (context instanceof IFragmentToMainActivity) {
+            this.pathway = (IFragmentToMainActivity) context;
+        } else {
+            throw new RuntimeException(context+" must implement IFragmentToMainActivity");
         }
     }
 

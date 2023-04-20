@@ -37,6 +37,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * The Main Activity that is responsible for switching between fragments.
@@ -92,7 +93,8 @@ public class MainActivity extends AppCompatActivity
                 switch (item.getItemId()) {
                     case (R.id.fragmentQuestHomePage):
                         Log.d("current firebase user:", currentUser.getDisplayName());
-                        replaceFragment(new FragmentQuestHomePage(currentUserLocalType));
+//                        replaceFragment(new FragmentQuestHomePage(currentUserLocalType));
+                        switchToHomePageFragment();
                         break;
                     case (R.id.fragmentProfilePage):
                         switchToProfilePageFragment();
@@ -121,12 +123,12 @@ public class MainActivity extends AppCompatActivity
     public void equipPath(Path path) {
         // can only start path if they have no current path
         if (currentUserLocalType.getCurrentPathID() == null) {
-
-            this.updateInfo(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
-            this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
-            currentUserLocalType.setCurrentPathID(path.getPathID());
-            currentUserLocalType.setCurrentPathName(path.getPathName());
+//            this.updateInfo(Tags.USERS_CURRENT_PATH_ID, path.getPathID());
+//            this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, path.getPathName());
+            this.currentUserLocalType.setCurrentPathID(path.getPathID());
+            this.currentUserLocalType.setCurrentPathName(path.getPathName());
             this.updateQuestsCompleted("");
+            this.updateUserOnFirebase();
             this.populateScreen();
         } else {
             Toast.makeText(this,
@@ -148,6 +150,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void goToHomePage(FirebaseUser currentUser) {
         this.currentUser = currentUser;
+
         Log.d("current firebase user:", currentUser.getDisplayName());
         this.populateScreen();
     }
@@ -162,16 +165,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void leaveCurrentPath() {
         Toast.makeText(this,"Current Path removed!",Toast.LENGTH_SHORT).show();
-        this.updateInfo(Tags.USERS_CURRENT_PATH_ID, null);
-        this.updateInfo(Tags.USERS_CURRENT_PATH_NAME, null);
-        currentUserLocalType.setCurrentPathID(null);
-        currentUserLocalType.setCurrentPathName(null);
-
+        this.currentUserLocalType.setCurrentPathID(null);
+        this.currentUserLocalType.setCurrentPathName(null);
+        this.updateUserOnFirebase();
         this.replaceFragment(new FragmentSearchPage(currentUserLocalType));
         this.populateScreen();
     }
-    @Override
 
+    @Override
     public void goToPathReviews(Path path) {
         replaceFragment(new FragmentPathReviewsPage(currentUserLocalType, path));
     }
@@ -259,24 +260,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Update the given key with the given value in Firebase.
-     * @param field key in Firebase
-     * @param info value in Firebase
-     */
-    private void updateInfo(String field, String info) {
-        this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
-                .update(field, info)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (!task.isSuccessful()) {
-                            Log.e(field, "onComplete: could not update field");
-                        }
-                    }
-                });
-    }
-
-    /**
      * Update the corresponding data when the user completes a quest.
      * @param questName name of the quest completed
      */
@@ -289,24 +272,14 @@ public class MainActivity extends AppCompatActivity
             questsCompleted.add(questName);
         }
 
-        this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
-                .update(Tags.USERS_COMPLETED_QUESTS, questsCompleted)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (!task.isSuccessful()) {
-                            Log.e("update quests completed", "onComplete: could not update the quests completed");
-                        } else {
-                            currentUserLocalType.setCompletedQuests(questsCompleted);
-                        }
-                    }
-                });
+        this.currentUserLocalType.setCompletedQuests(questsCompleted);
+//        this.updateUserOnFirebase();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length > 2) {
+        if (grantResults.length > 2) {
             binding.bottomNavView.setVisibility(View.GONE);
             replaceFragment(FragmentCameraController.newInstance());
         } else {
@@ -373,7 +346,6 @@ public class MainActivity extends AppCompatActivity
                         }
                     }
                 });
-
     }
 
     /**
@@ -435,8 +407,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void completeQuest(String questName, int questIndex, int expValue) {
-        updateExp(expValue); // update user exp (local & database)
-        updateQuestsCompleted(questName); // update user quests completed (local & database)
+        this.currentUserLocalType.addExp(expValue); // update user exp (local)
+        this.updateQuestsCompleted(questName); // update user quests completed (local)
+        this.updateUserOnFirebase(); // update user on the firebase
         this.db.collection(Tags.PATHS)
                 .document(this.currentUserLocalType.getCurrentPathID())
                 .get()
@@ -452,6 +425,8 @@ public class MainActivity extends AppCompatActivity
                         currentUserLocalType.completedPath(currentPath.getPathID());
                         updatePathsCompleted(currentPath.getPathID());
                         updateQuestsCompleted(""); // starting a new path, make quests completed empty
+                        // also need to update the firebase on the user's completed path
+                        updateUserOnFirebase();
                     }
                 }
             }
@@ -465,19 +440,6 @@ public class MainActivity extends AppCompatActivity
     private void updatePathsCompleted(String pathID) {
         ArrayList<String> pathsCompleted = this.currentUserLocalType.getCompletedPaths();
         pathsCompleted.add(pathID);
-
-        this.db.collection(Tags.USERS).document(this.currentUser.getEmail())
-                .update(Tags.USERS_COMPLETED_QUESTS, pathsCompleted)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (!task.isSuccessful()) {
-                            Log.e("update quests completed", "onComplete: could not update the quests completed");
-                        } else {
-                            currentUserLocalType.setCompletedPaths(pathsCompleted);
-                        }
-                    }
-                });
     }
 
     @Override
@@ -485,5 +447,30 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void updateUserOnFirebase() {
+        HashMap<String, Object> userHash = new HashMap<>();
+        userHash.put(Tags.USERS_DISPLAY_NAME, this.currentUserLocalType.getDisplayName());
+        userHash.put(Tags.USERS_EMAIL, this.currentUserLocalType.getEmail());
+        userHash.put(Tags.USERS_PASSWORD, this.currentUserLocalType.getPassword());
+        userHash.put(Tags.USERS_EXP, this.currentUserLocalType.getExp());
+        userHash.put(Tags.USERS_COMPLETED_PATHS, this.currentUserLocalType.getCompletedPaths());
+        userHash.put(Tags.USERS_COMPLETED_QUESTS, this.currentUserLocalType.getCompletedQuests());
+        userHash.put(Tags.USERS_CURRENT_PATH_ID, this.currentUserLocalType.getCurrentPathID());
+        userHash.put(Tags.USERS_CURRENT_PATH_NAME, this.currentUserLocalType.getCurrentPathName());
+        userHash.put(Tags.USERS_PROFILE_PICTURE, this.currentUserLocalType.getProfilePicture());
+        userHash.put(Tags.USERS_TRAVEL_LOG, this.currentUserLocalType.getTravelLog());
+        userHash.put(Tags.USERS_START_DATE, this.currentUserLocalType.getStartDate());
+
+        this.db.collection(Tags.USERS)
+                .document(this.currentUserLocalType.getEmail())
+                .set(userHash)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Register Fragment", "onFailure: " + e.getMessage());
+                    }
+                });
     }
 }

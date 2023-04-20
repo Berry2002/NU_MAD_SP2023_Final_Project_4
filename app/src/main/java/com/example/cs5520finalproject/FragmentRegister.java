@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -78,6 +79,10 @@ public class FragmentRegister extends Fragment {
                     tryRegister();
                     mUserLocalType = new User(retrieveText(displayName), retrieveText(email), retrieveText(password));
                     addUserToFirebase();
+                } else {
+                    displayName.setError("Please double check your display name.");
+                    email.setError("Please double check your email.");
+                    Toast.makeText(getContext(), "Please check all your fields!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -96,11 +101,11 @@ public class FragmentRegister extends Fragment {
             displayName.setError("Must input display name!");
             retVal = false;
         }
-        if (this.retrieveText(email).equals("")){
+        if (this.retrieveText(email).equals("")) {
             email.setError("Must input email!");
             retVal = false;
         }
-        if (this.retrieveText(password).equals("")){
+        if (this.retrieveText(password).equals("")) {
             password.setError("Password must not be empty!");
             retVal = false;
         }
@@ -140,6 +145,8 @@ public class FragmentRegister extends Fragment {
                                         }
                                     });
 
+                        } else {
+                            Toast.makeText(getContext(), "Error while registering: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
