@@ -271,9 +271,7 @@ public class MainActivity extends AppCompatActivity
             questsCompleted = this.currentUserLocalType.getCompletedQuests();
             questsCompleted.add(questName);
         }
-
         this.currentUserLocalType.setCompletedQuests(questsCompleted);
-//        this.updateUserOnFirebase();
     }
 
     @Override
@@ -423,7 +421,6 @@ public class MainActivity extends AppCompatActivity
                     if (currentPath.getNumQuests() == currentUserLocalType.getCompletedQuests().size()) {
                         // finished all quests - make the current path stuff empty
                         currentUserLocalType.completedPath(currentPath.getPathID());
-                        updatePathsCompleted(currentPath.getPathID());
                         updateQuestsCompleted(""); // starting a new path, make quests completed empty
                         // also need to update the firebase on the user's completed path
                         updateUserOnFirebase();
@@ -431,15 +428,6 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
-    }
-
-    /**
-     * Update the corresponding data when the user completes a path.
-     * @param pathID the path id a user has completed
-     */
-    private void updatePathsCompleted(String pathID) {
-        ArrayList<String> pathsCompleted = this.currentUserLocalType.getCompletedPaths();
-        pathsCompleted.add(pathID);
     }
 
     @Override
